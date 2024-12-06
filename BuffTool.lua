@@ -15,12 +15,12 @@ local auraTexturesByName = {
         rotation = 0
     },
     ['Electrified'] = {
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura00',
-        x = 0,
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
+        x = -30,
         y = 0,
         alpha = 0.9,
-        width = 80,
-        height = 200,
+        width = 160,
+        height = 160,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
@@ -111,7 +111,7 @@ local auraTexturesByName = {
         Pos = "LEFT",
         rotation = math.rad(180)
     },
-    ["Improved Fire Fall"] = {
+    ["Improved Soul Fire"] = {
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura216',
         x = -30,
         y = 20,
