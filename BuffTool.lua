@@ -122,6 +122,18 @@ local auraTexturesByName = {
         Color = {1,1,1},
         Pos = "LEFT",
         rotation = math.rad(180)
+    },
+    ["Purifying Flames"] = {
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura216',
+        x = -30,
+        y = 20,
+        alpha = 0.9,
+        width = 100,
+        height = 200,
+        Blend = "BLEND",
+        Color = {1,1,1},
+        Pos = "LEFT",
+        rotation = math.rad(180)
     }
 }
 
