@@ -4,6 +4,7 @@ local auraTexturesByName = {
     -- Shaman buffs
     ["The Eye of Diminution"] = {
         id = 28862,
+        canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura71',
         x = 0,
         y = 0,
@@ -18,6 +19,7 @@ local auraTexturesByName = {
     },
     ['Electrified'] = {
         id = 51395,
+        canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
         x = -30,
         y = 0,
@@ -32,6 +34,7 @@ local auraTexturesByName = {
     },
     ['Clearcasting'] = {
         id = 45542,
+        canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura224',
         x = 0,
         y = 0,
@@ -46,6 +49,7 @@ local auraTexturesByName = {
     },
     ['Berserking'] = {
         id= 26635,
+        canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura226M',
         x = 0,
         y = 0,
@@ -60,6 +64,7 @@ local auraTexturesByName = {
     },
     ['Elemental Mastery'] = {
         id = 16166,
+        canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
         x = 0,
         y = -20,
@@ -73,6 +78,7 @@ local auraTexturesByName = {
         duration = nil-- Example duration in seconds
     },
     ["Nature's Swiftness"] = {
+        canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
         x = 0,
         y = -20,
@@ -83,10 +89,11 @@ local auraTexturesByName = {
         Color = {1,1,1},
         Pos = "TOP",
         rotation = math.rad(180),
-        duration = 25 -- Example duration in seconds
+        duration = nil-- Example duration in seconds
     },
     ["The Eye of the Dead"] = {
         id=28780,
+        canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\AuraWing',
         x = 0,
         y = 20, 
@@ -101,6 +108,7 @@ local auraTexturesByName = {
     },
     ["Fever Dream"] = {
         id = 45858,
+        canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura198',
         x = 0,
         y = 20,
@@ -116,6 +124,7 @@ local auraTexturesByName = {
     -- -- warlock 
     ["Shadow Trance"] = {
         id=17941,
+        canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura229',
         x = -30,
         y = 20,
@@ -130,6 +139,7 @@ local auraTexturesByName = {
     },
     ["Improved Soul Fire"] = {
         id=51735,
+        canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura216',
         x = -30,
         y = 20,
@@ -145,6 +155,7 @@ local auraTexturesByName = {
     -- priest
     ["Purifying Flames"] = {
         id=51469,
+        canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura216',
         x = -30,
         y = 20,
@@ -200,8 +211,12 @@ end
 
 local function ShowTimer(spellName, duration, timerText)
     if auraTimers[spellName] then
-        auraTimers[spellName]:SetScript('OnUpdate', nil)
-        auraTimers[spellName] = nil
+        if auraTexturesByName[spellName].canRefresh then
+            auraTimers[spellName]:SetScript('OnUpdate', nil)
+            auraTimers[spellName] = nil
+        else
+            return
+        end
     end
 
     local timer = CreateFrame('FRAME')
@@ -288,7 +303,7 @@ local function IsAuraActive(spellName)
     for i = 1,40 do
         local icon, count,spellid = UnitBuff('player', i)
         if(icon) then
-            -- print (icon..", ".. count..", "..spellid)
+            print (icon..", ".. count..", "..spellid)
             local name = GetAuraNameById(spellid)
             if name == spellName then
                 return true
