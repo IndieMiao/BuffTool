@@ -17,7 +17,7 @@ local auraTexturesByName = {
         duration = 30 -- Example duration in seconds
     },
     ['Electrified'] = {
-        id = 51391,
+        id = 51395,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
         x = -30,
         y = 0,
@@ -206,17 +206,17 @@ local function ShowTimer(spellName, duration, timerText)
 
     local timer = CreateFrame('FRAME')
     timer.start = GetTime()
-    timer.duration = duration
+    timer.duration = duration+1
     timer.sec = 0
-    timer:SetScript('OnUpdate', function(self, elapsed)
-        if GetTime() >= (self.start + self.sec) then
-            self.sec = self.sec + 1
-            if self.sec <= duration then
-                timerText:SetText(self.duration - self.sec)
+    timer:SetScript('OnUpdate', function()
+        if GetTime() >= (this.start + this.sec) then
+            this.sec = this.sec + 1
+            if this.sec <= duration then
+                timerText:SetText(this.duration - this.sec)
                 return
             end
             timerText:Hide()
-            self:SetScript('OnUpdate', nil)
+            this:SetScript('OnUpdate', nil)
         end
     end)
     timerText:SetText(duration)
@@ -224,11 +224,14 @@ local function ShowTimer(spellName, duration, timerText)
     auraTimers[spellName] = timer
 end
 
+
 local function HandleAuraByName(spellName, isActive)
     local auraInfo = auraTexturesByName[spellName]
     if not auraInfo then return end
 
     local textureObject = auraTexturesObjects[spellName]
+    local timerText = auraTimersObjects[spellName]
+
     if not textureObject then
         textureObject = buffToolFrame:CreateTexture(nil, 'ARTWORK')
         auraTexturesObjects[spellName] = textureObject
@@ -247,10 +250,19 @@ local function HandleAuraByName(spellName, isActive)
         textureObject:SetBlendMode(auraInfo.Blend)
         textureObject:SetVertexColor(auraInfo.Color[1], auraInfo.Color[2], auraInfo.Color[3])
         textureObject:Show()
+        auraTexturesObjects[spellName] = textureObject
+    end
 
-        local timerText = auraTimersObjects[spellName]
+    -- if not timerText then
+    --     timerText = buffToolFrame:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
+    --     timerText:SetPoint('CENTER', textureObject)
+    --     auraTimersObjects[spellName] = timerText
+    -- end
+
+    if isActive then
+        textureObject:Show()
         if timerText and auraInfo.duration then
-            ShowTimer(auraInfo.duration, timerText)
+            ShowTimer(spellName, auraInfo.duration, timerText)
         end
 
         if isDebug then DEFAULT_CHAT_FRAME:AddMessage(spellName .. ' is active') end
@@ -276,7 +288,7 @@ local function IsAuraActive(spellName)
     for i = 1,40 do
         local icon, count,spellid = UnitBuff('player', i)
         if(icon) then
-            -- print (icon..", ".. count..", "..spellid)
+            print (icon..", ".. count..", "..spellid)
             local name = GetAuraNameById(spellid)
             if name == spellName then
                 return true
