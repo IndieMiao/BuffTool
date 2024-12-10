@@ -14,7 +14,7 @@ local auraTexturesByName = {
         Color = {1,1,1},
         Pos = "CENTER",
         rotation = 0,
-        duration = 30 -- Example duration in seconds
+        duration = 20 -- Example duration in seconds
     },
     ['Electrified'] = {
         id = 51395,
@@ -97,7 +97,7 @@ local auraTexturesByName = {
         Color = {1,1,1},
         Pos = "CENTER",
         rotation = math.rad(180),
-        duration = 25 -- Example duration in seconds
+        duration = 30 -- Example duration in seconds
     },
     ["Fever Dream"] = {
         id = 45858,
@@ -111,7 +111,7 @@ local auraTexturesByName = {
         Color = {1,1,1},
         Pos = "LEFT",
         rotation = math.rad(180),
-        duration = 25 -- Example duration in seconds
+        duration = 15 -- Example duration in seconds
     },
     -- -- warlock 
     ["Shadow Trance"] = {
@@ -126,7 +126,7 @@ local auraTexturesByName = {
         Color = {1,1,1},
         Pos = "LEFT",
         rotation = math.rad(180),
-        duration = 25 -- Example duration in seconds
+        duration = 10 -- Example duration in seconds
     },
     ["Improved Soul Fire"] = {
         id=51735,
@@ -288,7 +288,7 @@ local function IsAuraActive(spellName)
     for i = 1,40 do
         local icon, count,spellid = UnitBuff('player', i)
         if(icon) then
-            print (icon..", ".. count..", "..spellid)
+            -- print (icon..", ".. count..", "..spellid)
             local name = GetAuraNameById(spellid)
             if name == spellName then
                 return true
