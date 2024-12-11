@@ -312,6 +312,21 @@ local function IsAuraActive(spellName)
     end
     return false
 end
+
+local function GetAuraTimeByName(spellName)
+    for i = 1,40 do
+        local icon, count,spellid = UnitBuff('player', i)
+        if(icon) then
+            local name = GetAuraNameById(spellid)
+            if name == spellName then
+                local leftTime = GetPlayerBuffTimeLeft(i)
+                return leftTime
+            end
+        end
+    end
+    return nil
+end
+
 local function HideAllTextures()
     for spellName, textureObject in pairs(auraTexturesObjects) do
         textureObject:Hide()
@@ -340,7 +355,8 @@ buffToolFrame:SetScript('OnEvent', function()
     --     end
     elseif event == 'UNIT_AURA' and arg1 == 'player' then
         for spellName, auraInfo in pairs(auraTexturesByName) do
-            if IsAuraActive(spellName) then
+            local lefttime = GetAuraTimeByName(spellName)
+            if (lefttime) then
                 -- print (spellName .. " is active")
                 HandleAuraByName(spellName, true) -- Use duration from auraTexturesByName
             else
