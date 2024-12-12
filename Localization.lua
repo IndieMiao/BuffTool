@@ -3,8 +3,8 @@
 --- Created by admin.
 --- DateTime: 2024/12/13 7:05
 ---
+L = {}
 if (GetLocal() == "zhCN") then
-local L = {}
 L["The Eye of Diminution"] = "衰落之眼"
 L["Electrified"] = "充电"
 L["Clearcasting"] = "节能施法"
@@ -16,5 +16,4 @@ L["Fever Dream"] = "狂热梦想"
 L["Shadow Trance"] = "Localized Name for Shadow Trance"
 L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
 L["Purifying Flames"] = "Localized Name for Purifying Flames"
-    return L
 end

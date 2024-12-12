@@ -1,6 +1,5 @@
 -- blend mode :DISABLE, BLEND, ALPHAKEY, ADD, MOD
 local iconSize = 16;
-local L = require('Localization')
 local BUFFTOOLTABLE = {
     -- Shaman buffs
     [L["The Eye of Diminution"]] = {
