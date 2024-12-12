@@ -186,6 +186,7 @@ buffToolFrame:SetHeight(256)
 buffToolFrame:RegisterEvent('COMBAT_TEXT_UPDATE')
 buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS')
 buffToolFrame:RegisterEvent('PLAYER_DEAD')
+buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_SELF_DAMAGE')
 -- buffToolFrame:RegisterEvent('UNIT_AURA')
 
 local function DebugAllBuffTexture()
@@ -291,7 +292,7 @@ local function IsAuraActive(spellName)
     for i = 1,40 do
         local icon, count,spellid = UnitBuff('player', i)
         if(icon) then
-            print (icon..", ".. count..", "..spellid)
+            -- print (icon..", ".. count..", "..spellid)
             local name = GetAuraNameById(spellid)
             if name == spellName then
                 return true
@@ -310,7 +311,7 @@ local function GetAuraTimeByName(spellName)
                 -- print (spellName .. " is active")
                 local leftTime = GetPlayerBuffTimeLeft(i)
                 if leftTime then
-                    print ("Index : "..i..": "..spellName .. " is active and left time is " .. leftTime)
+                    -- print ("Index : "..i..": "..spellName .. " is active and left time is " .. leftTime)
                     return math.ceil( leftTime )
                 end
             end
@@ -352,11 +353,19 @@ buffToolFrame:SetScript('OnEvent', function()
         HideAllTextures()
     elseif event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
         if arg1 then
-            print (arg1)
+            -- print (arg1)
             local auraName, count = ExtractAuraInfo(arg1)
             if auraName then
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. auraName .. " is start") end
                 HandleAuraByName(auraName, true )
+            end
+        end
+    elseif event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
+        if arg1 then
+            -- print (arg1)
+            if string.find(arg1, "Lighting Bold") or string.find(arg1,"Chain Lightning") then
+                if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : lighting spelled" ) end
+                HandleAuraByName(auraName, false)
             end
         end
     elseif event == 'COMBAT_TEXT_UPDATE' and auraTexturesByName[arg2] then
