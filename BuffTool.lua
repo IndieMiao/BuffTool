@@ -360,12 +360,14 @@ buffToolFrame:SetScript('OnEvent', function()
                 HandleAuraByName(auraName, true )
             end
         end
+        -- Only for Electrified
     elseif event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
         if arg1 then
             -- print (arg1)
-            if string.find(arg1, "Lighting Bold") or string.find(arg1,"Chain Lightning") then
+            if string.find(arg1, "Lightning Bolt") or string.find(arg1,"Chain Lightning") then
+                -- print ("buffTool : lighting spelled" )
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : lighting spelled" ) end
-                HandleAuraByName(auraName, false)
+                HandleAuraByName("Electrified", true)
             end
         end
     elseif event == 'COMBAT_TEXT_UPDATE' and auraTexturesByName[arg2] then
