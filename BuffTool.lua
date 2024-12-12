@@ -1,6 +1,6 @@
 -- blend mode :DISABLE, BLEND, ALPHAKEY, ADD, MOD
 local iconSize = 16;
-local auraTexturesByName = {
+local BUFFTOOLTABLE = {
     -- Shaman buffs
     ["The Eye of Diminution"] = {
         id = 28862,
@@ -190,7 +190,7 @@ buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_SELF_DAMAGE')
 -- buffToolFrame:RegisterEvent('UNIT_AURA')
 
 local function DebugAllBuffTexture()
-    for spellName, auraInfo in pairs(auraTexturesByName) do
+    for spellName, auraInfo in pairs(BUFFTOOLTABLE) do
         if not auraTexturesObjects[spellName] then
             local textureObject = buffToolFrame:CreateTexture(nil, 'ARTWORK')
             textureObject:SetTexture(auraInfo.texture)
@@ -239,7 +239,7 @@ end
 
 
 local function HandleAuraByName(spellName, isActive)
-    local auraInfo = auraTexturesByName[spellName]
+    local auraInfo = BUFFTOOLTABLE[spellName]
     if not auraInfo then return end
 
     local textureObject = auraTexturesObjects[spellName]
@@ -370,7 +370,7 @@ buffToolFrame:SetScript('OnEvent', function()
                 HandleAuraByName("Electrified", true)
             end
         end
-    elseif event == 'COMBAT_TEXT_UPDATE' and auraTexturesByName[arg2] then
+    elseif event == 'COMBAT_TEXT_UPDATE' and BUFFTOOLTABLE[arg2] then
         if arg1 == 'AURA_END' then
             if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. arg2 .. " is over") end
             HandleAuraByName(arg2, false)
