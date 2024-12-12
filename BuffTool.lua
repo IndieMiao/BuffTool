@@ -237,7 +237,7 @@ local function ShowTimer(spellName, duration, timerText)
 end
 
 
-local function HandleAuraByName(spellName, isActive, duration)
+local function HandleAuraByName(spellName, isActive)
     local auraInfo = auraTexturesByName[spellName]
     if not auraInfo then return end
 
@@ -265,8 +265,8 @@ local function HandleAuraByName(spellName, isActive, duration)
 
     if isActive then
         textureObject:Show()
-        if timerText and duration then
-            ShowTimer(spellName, duration, timerText)
+        if timerText and auraInfo.duration then
+            ShowTimer(spellName, auraInfo.duration, timerText)
         end
 
         if isDebug then DEFAULT_CHAT_FRAME:AddMessage(spellName .. ' is active') end
