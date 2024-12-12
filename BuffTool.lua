@@ -279,46 +279,46 @@ local function HandleAuraByName(spellName, isActive)
         if isDebug then DEFAULT_CHAT_FRAME:AddMessage(spellName .. ' is over') end
     end
 end
-local function GetAuraNameById(id)
-    for spellName, auraInfo in pairs(auraTexturesByName) do
-        if auraInfo.id == id then
-            return spellName 
-        end
-    end
-    return nil -- Return nil if no match is found
-end
+-- local function GetAuraNameById(id)
+--     for spellName, auraInfo in pairs(auraTexturesByName) do
+--         if auraInfo.id == id then
+--             return spellName 
+--         end
+--     end
+--     return nil -- Return nil if no match is found
+-- end
 
-local function IsAuraActive(spellName) 
-    for i = 1,40 do
-        local icon, count,spellid = UnitBuff('player', i)
-        if(icon) then
-            -- print (icon..", ".. count..", "..spellid)
-            local name = GetAuraNameById(spellid)
-            if name == spellName then
-                return true
-            end
-        end
-    end
-    return false
-end
+-- local function IsAuraActive(spellName) 
+--     for i = 1,40 do
+--         local icon, count,spellid = UnitBuff('player', i)
+--         if(icon) then
+--             -- print (icon..", ".. count..", "..spellid)
+--             local name = GetAuraNameById(spellid)
+--             if name == spellName then
+--                 return true
+--             end
+--         end
+--     end
+--     return false
+-- end
 
-local function GetAuraTimeByName(spellName)
-    for i = 0,12 do
-        local icon, count,spellid = UnitBuff('player', i)
-        if(icon) then
-            local name = GetAuraNameById(spellid)
-            if name == spellName then
-                -- print (spellName .. " is active")
-                local leftTime = GetPlayerBuffTimeLeft(i)
-                if leftTime then
-                    -- print ("Index : "..i..": "..spellName .. " is active and left time is " .. leftTime)
-                    return math.ceil( leftTime )
-                end
-            end
-        end
-    end
-    return nil
-end
+-- local function GetAuraTimeByName(spellName)
+--     for i = 0,12 do
+--         local icon, count,spellid = UnitBuff('player', i)
+--         if(icon) then
+--             local name = GetAuraNameById(spellid)
+--             if name == spellName then
+--                 -- print (spellName .. " is active")
+--                 local leftTime = GetPlayerBuffTimeLeft(i)
+--                 if leftTime then
+--                     -- print ("Index : "..i..": "..spellName .. " is active and left time is " .. leftTime)
+--                     return math.ceil( leftTime )
+--                 end
+--             end
+--         end
+--     end
+--     return nil
+-- end
 
 local function HideAllTextures()
     for spellName, textureObject in pairs(auraTexturesObjects) do
