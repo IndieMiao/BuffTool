@@ -1,8 +1,9 @@
 -- blend mode :DISABLE, BLEND, ALPHAKEY, ADD, MOD
 local iconSize = 16;
+local L = require('Localization')
 local BUFFTOOLTABLE = {
     -- Shaman buffs
-    ["The Eye of Diminution"] = {
+    [L["The Eye of Diminution"]] = {
         id = 28862,
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura71',
@@ -17,7 +18,7 @@ local BUFFTOOLTABLE = {
         rotation = 0,
         duration = 20 -- Example duration in seconds
     },
-    ['Electrified'] = {
+    [L['Electrified']] = {
         id = 51395,
         canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
@@ -32,7 +33,7 @@ local BUFFTOOLTABLE = {
         rotation = 0,
         duration = 20 -- Example duration in seconds
     },
-    ['Clearcasting'] = {
+    [L['Clearcasting']] = {
         id = 45542,
         canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura224',
@@ -47,7 +48,7 @@ local BUFFTOOLTABLE = {
         rotation = 0,
         duration = 15 -- Example duration in seconds
     },
-    ['Berserking'] = {
+    [L['Berserking']] = {
         id= 26635,
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura226M',
@@ -62,7 +63,7 @@ local BUFFTOOLTABLE = {
         rotation = math.rad(180),
         duration = 10 -- Example duration in seconds
     },
-    ['Elemental Mastery'] = {
+    [L['Elemental Mastery']] = {
         id = 16166,
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
@@ -77,7 +78,7 @@ local BUFFTOOLTABLE = {
         rotation = math.rad(180),
         duration = nil-- Example duration in seconds
     },
-    ["Nature's Swiftness"] = {
+    [L["Nature's Swiftness"]] = {
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
         x = 0,
@@ -91,7 +92,7 @@ local BUFFTOOLTABLE = {
         rotation = math.rad(180),
         duration = nil-- Example duration in seconds
     },
-    ["The Eye of the Dead"] = {
+    [L["The Eye of the Dead"]] = {
         id=28780,
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\AuraWing',
@@ -106,7 +107,7 @@ local BUFFTOOLTABLE = {
         rotation = math.rad(180),
         duration = 30 -- Example duration in seconds
     },
-    ["Fever Dream"] = {
+    [L["Fever Dream"]] = {
         id = 45858,
         canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura198',
@@ -122,7 +123,7 @@ local BUFFTOOLTABLE = {
         duration = 15 -- Example duration in seconds
     },
     -- -- warlock 
-    ["Shadow Trance"] = {
+    [L["Shadow Trance"]] = {
         id=17941,
         canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura229',
@@ -137,7 +138,7 @@ local BUFFTOOLTABLE = {
         rotation = math.rad(180),
         duration = 10 -- Example duration in seconds
     },
-    ["Improved Soul Fire"] = {
+    [L["Improved Soul Fire"]] = {
         id=51735,
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura216',
@@ -153,7 +154,7 @@ local BUFFTOOLTABLE = {
         duration = 25 -- Example duration in seconds
     },
     -- priest
-    ["Purifying Flames"] = {
+    [L["Purifying Flames"]] = {
         id=51469,
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura216',
