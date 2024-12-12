@@ -184,8 +184,9 @@ buffToolFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, -30)
 buffToolFrame:SetWidth(256)
 buffToolFrame:SetHeight(256)
 buffToolFrame:RegisterEvent('COMBAT_TEXT_UPDATE')
+buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS')
 buffToolFrame:RegisterEvent('PLAYER_DEAD')
-buffToolFrame:RegisterEvent('UNIT_AURA')
+-- buffToolFrame:RegisterEvent('UNIT_AURA')
 
 local function DebugAllBuffTexture()
     for spellName, auraInfo in pairs(auraTexturesByName) do
@@ -211,17 +212,13 @@ end
 
 local function ShowTimer(spellName, duration, timerText)
     if auraTimers[spellName] then
-        if auraTexturesByName[spellName].canRefresh then
-            auraTimers[spellName]:SetScript('OnUpdate', nil)
-            auraTimers[spellName] = nil
-        else
-            return
-        end
+        auraTimers[spellName]:SetScript('OnUpdate', nil)
+        auraTimers[spellName] = nil
     end
 
     local timer = CreateFrame('FRAME')
     timer.start = GetTime()
-    timer.duration = duration+1
+    timer.duration = duration
     timer.sec = 0
     timer:SetScript('OnUpdate', function()
         if GetTime() >= (this.start + this.sec) then
@@ -240,7 +237,7 @@ local function ShowTimer(spellName, duration, timerText)
 end
 
 
-local function HandleAuraByName(spellName, isActive)
+local function HandleAuraByName(spellName, isActive, duration)
     local auraInfo = auraTexturesByName[spellName]
     if not auraInfo then return end
 
@@ -249,14 +246,6 @@ local function HandleAuraByName(spellName, isActive)
 
     if not textureObject then
         textureObject = buffToolFrame:CreateTexture(nil, 'ARTWORK')
-        auraTexturesObjects[spellName] = textureObject
-
-        local timerText = buffToolFrame:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
-        timerText:SetPoint('CENTER', textureObject)
-        auraTimersObjects[spellName] = timerText
-    end
-
-    if isActive then
         textureObject:SetTexture(auraInfo.texture)
         textureObject:SetPoint('CENTER', buffToolFrame, auraInfo.Pos, auraInfo.x, auraInfo.y)
         textureObject:SetAlpha(auraInfo.alpha)
@@ -268,22 +257,21 @@ local function HandleAuraByName(spellName, isActive)
         auraTexturesObjects[spellName] = textureObject
     end
 
-    -- if not timerText then
-    --     timerText = buffToolFrame:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
-    --     timerText:SetPoint('CENTER', textureObject)
-    --     auraTimersObjects[spellName] = timerText
-    -- end
+    if not timerText then
+        timerText = buffToolFrame:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
+        timerText:SetPoint('CENTER', textureObject)
+        auraTimersObjects[spellName] = timerText
+    end
 
     if isActive then
         textureObject:Show()
-        if timerText and auraInfo.duration then
-            ShowTimer(spellName, auraInfo.duration, timerText)
+        if timerText and duration then
+            ShowTimer(spellName, duration, timerText)
         end
 
         if isDebug then DEFAULT_CHAT_FRAME:AddMessage(spellName .. ' is active') end
     else
         textureObject:Hide()
-        local timerText = auraTimersObjects[spellName]
         if timerText then
             timerText:Hide()
         end
@@ -314,13 +302,17 @@ local function IsAuraActive(spellName)
 end
 
 local function GetAuraTimeByName(spellName)
-    for i = 1,40 do
+    for i = 0,12 do
         local icon, count,spellid = UnitBuff('player', i)
         if(icon) then
             local name = GetAuraNameById(spellid)
             if name == spellName then
+                -- print (spellName .. " is active")
                 local leftTime = GetPlayerBuffTimeLeft(i)
-                return leftTime
+                if leftTime then
+                    print ("Index : "..i..": "..spellName .. " is active and left time is " .. leftTime)
+                    return math.ceil( leftTime )
+                end
             end
         end
     end
@@ -342,28 +334,36 @@ local function HideAllTextures()
     if isDebug then DEFAULT_CHAT_FRAME:AddMessage("All textures hidden due to player death") end
 end
 
+local function ExtractAuraInfo(message)
+    if not message then return nil, nil end
+
+    local start, stop, auraName = string.find(message, "You gain ([%a%s%p]+) %(")
+    if not start then return nil, nil end
+
+    local stackStart, stackStop, stack= string.find(message, "%((%d+)%)", stop)
+    if not stackStart then return nil, nil end
+
+    return auraName, tonumber(stack)
+end
+
+
 buffToolFrame:SetScript('OnEvent', function()
     if event == 'PLAYER_DEAD' then
         HideAllTextures()
-    -- elseif event == 'COMBAT_TEXT_UPDATE' and auraTexturesByName[arg2] then
-    --     if arg1 == 'AURA_START' then
-    --         if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. arg2 .. " is start") end
-    --         HandleAuraByName(arg2, true) -- Use duration from auraTexturesByName
-    --     elseif arg1 == 'AURA_END' then
-    --         if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. arg2 .. " is over") end
-    --         HandleAuraByName(arg2, false)
-    --     end
-    elseif event == 'UNIT_AURA' and arg1 == 'player' then
-        for spellName, auraInfo in pairs(auraTexturesByName) do
-            local lefttime = GetAuraTimeByName(spellName)
-            if (lefttime) then
-                -- print (spellName .. " is active")
-                HandleAuraByName(spellName, true) -- Use duration from auraTexturesByName
-            else
-                -- print (spellName .. " is not active")
-                HandleAuraByName(spellName, false)
+    elseif event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
+        if arg1 then
+            print (arg1)
+            local auraName, count = ExtractAuraInfo(arg1)
+            if auraName then
+                if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. auraName .. " is start") end
+                HandleAuraByName(auraName, true )
             end
-        end 
+        end
+    elseif event == 'COMBAT_TEXT_UPDATE' and auraTexturesByName[arg2] then
+        if arg1 == 'AURA_END' then
+            if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. arg2 .. " is over") end
+            HandleAuraByName(arg2, false)
+        end
     end
 end)
 
