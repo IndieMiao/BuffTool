@@ -2,6 +2,7 @@
 local iconSize = 16;
 local L = {}
 if (GetLocale() == "zhCN") then
+    DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
     L["The Eye of Diminution"] = "衰落之眼"
     L["Electrified"] = "充电"
     L["Clearcasting"] = "节能施法"
