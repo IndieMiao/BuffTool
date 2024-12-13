@@ -1,6 +1,20 @@
 -- blend mode :DISABLE, BLEND, ALPHAKEY, ADD, MOD
 local iconSize = 16;
 local L = {}
+
+    DEFAULT_CHAT_FRAME:AddMessage("BuffTool : English")
+    L["The Eye of Diminution"] = "The Eye of Diminution"
+    L["Electrified"] = "Electrified"
+    L["Clearcasting"] = "Clearcasting"
+    L["Berserking"] = "Berserking"
+    L["Elemental Mastery"] = "Elemental Mastery"
+    L["Nature's Swiftness"] = "Nature's Swiftness"
+    L["The Eye of the Dead"] = "The Eye of the Dead"
+    L["Fever Dream"] = "Fever Dream"
+    L["Shadow Trance"] = "Shadow Trance"
+    L["Improved Soul Fire"] = "Improved Soul Fire"
+    L["Purifying Flames"] = "Purifying Flames"
+
 if (GetLocale() == "zhCN") then
     DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
     L["The Eye of Diminution"] = "衰落之眼"
@@ -15,7 +29,6 @@ if (GetLocale() == "zhCN") then
     L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
     L["Purifying Flames"] = "Localized Name for Purifying Flames"
 end
-
 local BUFFTOOLTABLE = {
     -- Shaman buffs
     [L["The Eye of Diminution"]] = {
@@ -33,7 +46,7 @@ local BUFFTOOLTABLE = {
         rotation = 0,
         duration = 20 -- Example duration in seconds
     },
-    [L['Electrified']] = {
+    [L["Electrified"]] = {
         id = 51395,
         canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
@@ -48,7 +61,7 @@ local BUFFTOOLTABLE = {
         rotation = 0,
         duration = 20 -- Example duration in seconds
     },
-    [L['Clearcasting']] = {
+    [L["Clearcasting"]] = {
         id = 45542,
         canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura224',
@@ -63,7 +76,7 @@ local BUFFTOOLTABLE = {
         rotation = 0,
         duration = 15 -- Example duration in seconds
     },
-    [L['Berserking']] = {
+    [L["Berserking"]] = {
         id= 26635,
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura226M',
@@ -78,7 +91,7 @@ local BUFFTOOLTABLE = {
         rotation = math.rad(180),
         duration = 10 -- Example duration in seconds
     },
-    [L['Elemental Mastery']] = {
+    [L["Elemental Mastery"]] = {
         id = 16166,
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
