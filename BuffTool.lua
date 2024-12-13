@@ -1,5 +1,20 @@
 -- blend mode :DISABLE, BLEND, ALPHAKEY, ADD, MOD
 local iconSize = 16;
+local L = {}
+if (GetLocale() == "zhCN") then
+    L["The Eye of Diminution"] = "衰落之眼"
+    L["Electrified"] = "充电"
+    L["Clearcasting"] = "节能施法"
+    L["Berserking"] = "狂暴"
+    L["Elemental Mastery"] = "元素掌握"
+    L["Nature's Swiftness"] = "自然迅捷"
+    L["The Eye of the Dead"] = "亡者之眼"
+    L["Fever Dream"] = "狂热梦想"
+    L["Shadow Trance"] = "Localized Name for Shadow Trance"
+    L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
+    L["Purifying Flames"] = "Localized Name for Purifying Flames"
+end
+
 local BUFFTOOLTABLE = {
     -- Shaman buffs
     [L["The Eye of Diminution"]] = {
