@@ -14,6 +14,8 @@ local L = {}
     L["Shadow Trance"] = "Shadow Trance"
     L["Improved Soul Fire"] = "Improved Soul Fire"
     L["Purifying Flames"] = "Purifying Flames"
+    CHAT_MSG_AURA_SPELLTOKEN = "You gain ([%a%s%p]+) %("
+    CHAT_MSG_AURA_STACKTOKEN = "%((%d+)%)"
 
 if (GetLocale() == "zhCN") then
     DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
@@ -28,6 +30,8 @@ if (GetLocale() == "zhCN") then
     L["Shadow Trance"] = "Localized Name for Shadow Trance"
     L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
     L["Purifying Flames"] = "Localized Name for Purifying Flames"
+    CHAT_MSG_AURA_SPELLTOKEN = "你获得了([%a%s%p]+)的效果"
+    CHAT_MSG_AURA_STACKTOKEN = "%((%d+)%)"
 end
 local BUFFTOOLTABLE = {
     -- Shaman buffs
@@ -367,10 +371,10 @@ end
 local function ExtractAuraInfo(message)
     if not message then return nil, nil end
 
-    local start, stop, auraName = string.find(message, "You gain ([%a%s%p]+) %(")
+    local start, stop, auraName = string.find(message,CHAT_MSG_AURA_SPELLTOKEN)
     if not start then return nil, nil end
 
-    local stackStart, stackStop, stack= string.find(message, "%((%d+)%)", stop)
+    local stackStart, stackStop, stack= string.find(message, CHAT_MSG_AURA_STACKTOKEN, stop)
     if not stackStart then return nil, nil end
 
     return auraName, tonumber(stack)
@@ -382,7 +386,7 @@ buffToolFrame:SetScript('OnEvent', function()
         HideAllTextures()
     elseif event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
         if arg1 then
-            -- print (arg1)
+             --print (arg1)
             local auraName, count = ExtractAuraInfo(arg1)
             if auraName then
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. auraName .. " is start") end
@@ -392,7 +396,7 @@ buffToolFrame:SetScript('OnEvent', function()
         -- Only for Electrified
     elseif event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
         if arg1 then
-            -- print (arg1)
+             --print (arg1)
             if string.find(arg1, "Lightning Bolt") or string.find(arg1,"Chain Lightning") then
                 -- print ("buffTool : lighting spelled" )
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : lighting spelled" ) end
@@ -401,6 +405,7 @@ buffToolFrame:SetScript('OnEvent', function()
         end
     elseif event == 'COMBAT_TEXT_UPDATE' and BUFFTOOLTABLE[arg2] then
         if arg1 == 'AURA_END' then
+            --print(arg1)
             if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. arg2 .. " is over") end
             HandleAuraByName(arg2, false)
         end
