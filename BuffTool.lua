@@ -25,7 +25,7 @@ if (GetLocale() == "zhCN") then
     L["Nature's Swiftness"] = "自然迅捷"
     L["The Eye of the Dead"] = "亡者之眼"
     L["Fever Dream"] = "狂热梦想"
-    L["Shadow Trance"] = "Localized Name for Shadow Trance"
+    L["Shadow Trance"] = "暗影冥思"
     L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
     L["Purifying Flames"] = "Localized Name for Purifying Flames"
 end
@@ -148,19 +148,19 @@ local BUFFTOOLTABLE = {
         Color = {1,1,1},
         Pos = "LEFT",
         rotation = math.rad(180),
-        duration = 15 -- Example duration in seconds
+        duration = 20 -- Example duration in seconds
     },
     -- -- warlock 
     [L["Shadow Trance"]] = {
         id=17941,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura229',
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\AruaUni',
         x = -30,
         y = 20,
         alpha = 0.9,
-        width = 100,
-        height = 200,
-        Blend = "BLEND",
+        width = 150,
+        height = 150,
+        Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
         rotation = math.rad(180),
@@ -189,7 +189,7 @@ local BUFFTOOLTABLE = {
         x = -30,
         y = 20,
         alpha = 0.9,
-        width = 100,
+        width = 200,
         height = 200,
         Blend = "BLEND",
         Color = {1,1,1},
@@ -308,46 +308,6 @@ local function HandleAuraByName(spellName, isActive)
         if isDebug then DEFAULT_CHAT_FRAME:AddMessage(spellName .. ' is over') end
     end
 end
--- local function GetAuraNameById(id)
---     for spellName, auraInfo in pairs(auraTexturesByName) do
---         if auraInfo.id == id then
---             return spellName 
---         end
---     end
---     return nil -- Return nil if no match is found
--- end
-
--- local function IsAuraActive(spellName) 
---     for i = 1,40 do
---         local icon, count,spellid = UnitBuff('player', i)
---         if(icon) then
---             -- print (icon..", ".. count..", "..spellid)
---             local name = GetAuraNameById(spellid)
---             if name == spellName then
---                 return true
---             end
---         end
---     end
---     return false
--- end
-
--- local function GetAuraTimeByName(spellName)
---     for i = 0,12 do
---         local icon, count,spellid = UnitBuff('player', i)
---         if(icon) then
---             local name = GetAuraNameById(spellid)
---             if name == spellName then
---                 -- print (spellName .. " is active")
---                 local leftTime = GetPlayerBuffTimeLeft(i)
---                 if leftTime then
---                     -- print ("Index : "..i..": "..spellName .. " is active and left time is " .. leftTime)
---                     return math.ceil( leftTime )
---                 end
---             end
---         end
---     end
---     return nil
--- end
 
 local function HideAllTextures()
     for spellName, textureObject in pairs(auraTexturesObjects) do
