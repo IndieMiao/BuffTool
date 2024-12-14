@@ -368,10 +368,10 @@ buffToolFrame:SetScript('OnEvent', function()
         -- Only for Electrified
     elseif event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
         if arg1 then
-            DEFAULT_CHAT_FRAME:AddMessage(arg1)
             if string.find(arg1, L["Lightning Bolt"]) or string.find(arg1,L["Chain Lightning"]) then
+                if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1.." Have lighting spell") end
                 if not (string.find(arg1, L["resisted"])) then
-                    if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : lighting spelled" ) end
+                    if isDebug then DEFAULT_CHAT_FRAME:AddMessage(arg1.." not resisted") end
                     HandleAuraByName("Electrified", true)
                 end
             end
