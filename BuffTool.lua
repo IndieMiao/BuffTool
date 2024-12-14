@@ -16,6 +16,7 @@ L["Improved Soul Fire"] = "Improved Soul Fire"
 L["Purifying Flames"] = "Purifying Flames"
 L["Lightning Bolt"] = "Lightning Bolt"
 L["Chain Lightning"] = "Chain Lightning"
+L["resisted"] = "was resisted by"
 
 if (GetLocale() == "zhCN") then
     DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
@@ -32,6 +33,7 @@ if (GetLocale() == "zhCN") then
     L["Purifying Flames"] = "Localized Name for Purifying Flames"
     L["Lightning Bolt"] = "闪电箭"
     L["Chain Lightning"] = "闪电链"
+    L["resisted"] = "抵抗"
 
 end
 local BUFFTOOLTABLE = {
@@ -357,7 +359,6 @@ buffToolFrame:SetScript('OnEvent', function()
     elseif event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
         if arg1 then
             --DEFAULT_CHAT_FRAME:AddMessage(arg1)
-            -- print (arg1)
             local auraName, _= AuraActivated(arg1)
             if auraName then
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. auraName .. " is start") end
@@ -367,9 +368,9 @@ buffToolFrame:SetScript('OnEvent', function()
         -- Only for Electrified
     elseif event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
         if arg1 then
-            -- print (arg1)
+            DEFAULT_CHAT_FRAME:AddMessage(arg1)
             if string.find(arg1, L["Lightning Bolt"]) or string.find(arg1,L["Chain Lightning"]) then
-                -- print ("buffTool : lighting spelled" )
+                if(string.find(arg1, L["resisted"])) then return end
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : lighting spelled" ) end
                 HandleAuraByName("Electrified", true)
             end
