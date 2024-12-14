@@ -2,18 +2,20 @@
 local iconSize = 16;
 local L = {}
 
-    DEFAULT_CHAT_FRAME:AddMessage("BuffTool : English")
-    L["The Eye of Diminution"] = "The Eye of Diminution"
-    L["Electrified"] = "Electrified"
-    L["Clearcasting"] = "Clearcasting"
-    L["Berserking"] = "Berserking"
-    L["Elemental Mastery"] = "Elemental Mastery"
-    L["Nature's Swiftness"] = "Nature's Swiftness"
-    L["The Eye of the Dead"] = "The Eye of the Dead"
-    L["Fever Dream"] = "Fever Dream"
-    L["Shadow Trance"] = "Shadow Trance"
-    L["Improved Soul Fire"] = "Improved Soul Fire"
-    L["Purifying Flames"] = "Purifying Flames"
+DEFAULT_CHAT_FRAME:AddMessage("BuffTool : English")
+L["The Eye of Diminution"] = "The Eye of Diminution"
+L["Electrified"] = "Electrified"
+L["Clearcasting"] = "Clearcasting"
+L["Berserking"] = "Berserking"
+L["Elemental Mastery"] = "Elemental Mastery"
+L["Nature's Swiftness"] = "Nature's Swiftness"
+L["The Eye of the Dead"] = "The Eye of the Dead"
+L["Fever Dream"] = "Fever Dream"
+L["Shadow Trance"] = "Shadow Trance"
+L["Improved Soul Fire"] = "Improved Soul Fire"
+L["Purifying Flames"] = "Purifying Flames"
+L["Lightning Bolt"] = "Lightning Bolt"
+L["Lightning Chain"] = "Chain Lightning"
 
 if (GetLocale() == "zhCN") then
     DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
@@ -28,6 +30,9 @@ if (GetLocale() == "zhCN") then
     L["Shadow Trance"] = "暗影冥思"
     L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
     L["Purifying Flames"] = "Localized Name for Purifying Flames"
+    L["Lightning Bolt"] = "闪电箭"
+    L["Lightning Chain"] = "闪电链"
+
 end
 local BUFFTOOLTABLE = {
     -- Shaman buffs
@@ -336,14 +341,24 @@ local function ExtractAuraInfo(message)
     return auraName, tonumber(stack)
 end
 
+local function AuraActivated(message)
+    for spellName, _ in pairs(BUFFTOOLTABLE) do
+        if string.find(message, spellName) then
+            return spellName, true 
+        end
+    end
+    return nil, false
+end
+
 
 buffToolFrame:SetScript('OnEvent', function()
     if event == 'PLAYER_DEAD' then
         HideAllTextures()
     elseif event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
         if arg1 then
+            DEFAULT_CHAT_FRAME:AddMessage(arg1)
             -- print (arg1)
-            local auraName, count = ExtractAuraInfo(arg1)
+            local auraName, _= AuraActivated(arg1)
             if auraName then
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. auraName .. " is start") end
                 HandleAuraByName(auraName, true )
@@ -353,7 +368,7 @@ buffToolFrame:SetScript('OnEvent', function()
     elseif event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
         if arg1 then
             -- print (arg1)
-            if string.find(arg1, "Lightning Bolt") or string.find(arg1,"Chain Lightning") then
+            if string.find(arg1, L["Lightning Bolt"]) or string.find(arg1,L["Chain Lightning"]) then
                 -- print ("buffTool : lighting spelled" )
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : lighting spelled" ) end
                 HandleAuraByName("Electrified", true)
