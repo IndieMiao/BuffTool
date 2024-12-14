@@ -15,7 +15,7 @@ L["Shadow Trance"] = "Shadow Trance"
 L["Improved Soul Fire"] = "Improved Soul Fire"
 L["Purifying Flames"] = "Purifying Flames"
 L["Lightning Bolt"] = "Lightning Bolt"
-L["Lightning Chain"] = "Chain Lightning"
+L["Chain Lightning"] = "Chain Lightning"
 
 if (GetLocale() == "zhCN") then
     DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
@@ -31,7 +31,7 @@ if (GetLocale() == "zhCN") then
     L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
     L["Purifying Flames"] = "Localized Name for Purifying Flames"
     L["Lightning Bolt"] = "闪电箭"
-    L["Lightning Chain"] = "闪电链"
+    L["Chain Lightning"] = "闪电链"
 
 end
 local BUFFTOOLTABLE = {
@@ -356,7 +356,7 @@ buffToolFrame:SetScript('OnEvent', function()
         HideAllTextures()
     elseif event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
         if arg1 then
-            DEFAULT_CHAT_FRAME:AddMessage(arg1)
+            --DEFAULT_CHAT_FRAME:AddMessage(arg1)
             -- print (arg1)
             local auraName, _= AuraActivated(arg1)
             if auraName then
