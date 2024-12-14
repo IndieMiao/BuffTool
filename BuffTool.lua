@@ -33,7 +33,7 @@ if (GetLocale() == "zhCN") then
     L["Purifying Flames"] = "Localized Name for Purifying Flames"
     L["Lightning Bolt"] = "闪电箭"
     L["Chain Lightning"] = "闪电链"
-    L["resisted"] = "抵抗"
+    L["resisted"] = "抵抗了"
 
 end
 local BUFFTOOLTABLE = {
