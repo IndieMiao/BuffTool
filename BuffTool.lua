@@ -372,7 +372,7 @@ buffToolFrame:SetScript('OnEvent', function()
                 if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1.." Have lighting spell") end
                 if not (string.find(arg1, L["resisted"])) then
                     if isDebug then DEFAULT_CHAT_FRAME:AddMessage(arg1.." not resisted") end
-                    HandleAuraByName("Electrified", true)
+                    HandleAuraByName(L["Electrified"], true)
                 end
             end
         end
