@@ -370,9 +370,10 @@ buffToolFrame:SetScript('OnEvent', function()
         if arg1 then
             DEFAULT_CHAT_FRAME:AddMessage(arg1)
             if string.find(arg1, L["Lightning Bolt"]) or string.find(arg1,L["Chain Lightning"]) then
-                if(string.find(arg1, L["resisted"])) then return end
-                if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : lighting spelled" ) end
-                HandleAuraByName("Electrified", true)
+                if not (string.find(arg1, L["resisted"])) then
+                    if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : lighting spelled" ) end
+                    HandleAuraByName("Electrified", true)
+                end
             end
         end
     elseif event == 'COMBAT_TEXT_UPDATE' and BUFFTOOLTABLE[arg2] then
