@@ -46,13 +46,13 @@ if (GetLocale() == "zhCN") then
     L["You crit"] = "你暴击"
 end
 
-local RREFRESH_BUFF_BY_SPELL =
+local REFRESH_BUFF_BY_SPELL =
 {
     [L["Stormstrike"]] = L["Stormstrike"],
     [L["Chain Lightning"]] = L["Electrified"],
     [L["Lightning Bolt"]] = L["Electrified"],
 }
-local RREFRESH_BUFF_BY_HIT= {
+local REFRESH_BUFF_BY_HIT = {
     [L["You crit"]] = {
         L["Elemental Devastation"],
         L["Flurry"],
@@ -94,12 +94,12 @@ local BUFFTOOLTABLE = {
     [L["Clearcasting"]] = {
         id = 45542,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura224',
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\Lightning2',
         x = 0,
-        y = 0,
-        alpha = 0.85,
-        width = 168,
-        height = 64,
+        y = 10,
+        alpha = 0.95,
+        width = 200,
+        height = 100,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOP",
@@ -199,7 +199,7 @@ local BUFFTOOLTABLE = {
         id = 29180,
         canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\ElementalDevastation',
-        x = -40,
+        x = -15,
         y = -30,
         alpha = 0.8,
         width = 64,
@@ -425,7 +425,7 @@ local function AuraActivated(message)
 end
 
 local function RefreshTimeBySpell(CombatText)
-    for spellName, auraName in pairs(RREFRESH_BUFF_BY_SPELL) do
+    for spellName, auraName in pairs(REFRESH_BUFF_BY_SPELL) do
         if string.find(CombatText, spellName) then
             if not (string.find(CombatText, L["resisted"])) then
                 local ttt = auraTimersObjects[auraName]
@@ -437,7 +437,7 @@ local function RefreshTimeBySpell(CombatText)
 end
 
 local function RefreshBuffByHit(CombatText)
-    for HitToken, auraNames in pairs(RREFRESH_BUFF_BY_HIT) do
+    for HitToken, auraNames in pairs(REFRESH_BUFF_BY_HIT) do
         if HitToken then
             --print(HitToken.." " .. CombatText)
             if string.find(CombatText, HitToken) then
@@ -472,6 +472,7 @@ buffToolFrame:SetScript('OnEvent', function()
             end
         end
     end
+    -- melee hit or crit
     if event =='CHAT_MSG_COMBAT_SELF_HITS' then
         if arg1 then
             if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1) end
@@ -479,14 +480,14 @@ buffToolFrame:SetScript('OnEvent', function()
         end
     end
 
-    --    refresh buff by spell
+    --   spell hit 
     if event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
         if arg1 then
             if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1) end
             RefreshTimeBySpell(arg1)
         end
     end
-    --    refresh buff by hit or crit
+    --   buff over  
     if event == 'COMBAT_TEXT_UPDATE' then
         if BUFFTOOLTABLE[arg2] then
             if arg1 == 'AURA_END' then
