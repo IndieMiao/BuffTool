@@ -17,6 +17,11 @@ L["Purifying Flames"] = "Purifying Flames"
 L["Lightning Bolt"] = "Lightning Bolt"
 L["Chain Lightning"] = "Chain Lightning"
 L["resisted"] = "was resisted by"
+L["Stormstrike"] = "Stormstrike"
+L["Elemental Devastation"] = "Elemental Devastation"
+L["Flurry"] = "Flurry"
+L["ARUAGET_TOKEN"] = "You gain "
+L["You crit"] = "You crit "
 
 if (GetLocale() == "zhCN") then
     DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
@@ -34,8 +39,26 @@ if (GetLocale() == "zhCN") then
     L["Lightning Bolt"] = "闪电箭"
     L["Chain Lightning"] = "闪电链"
     L["resisted"] = "抵抗了"
-
+    L["Stormstrike"] = "风暴打击"
+    L["Elemental Devastation"] = "元素浩劫"
+    L["Flurry"] = "乱舞"
+    L["ARUAGET_TOKEN"] = "你获得了"
+    L["You crit"] = "你暴击"
 end
+
+local RREFRESH_BUFF_BY_SPELL =
+{
+    [L["Stormstrike"]] = L["Stormstrike"],
+    [L["Chain Lightning"]] = L["Electrified"],
+    [L["Lightning Bolt"]] = L["Electrified"],
+}
+local RREFRESH_BUFF_BY_HIT= {
+    [L["You crit"]] = {
+        L["Elemental Devastation"],
+        L["Flurry"],
+        L["Clearcasting"],
+    }
+}
 local BUFFTOOLTABLE = {
     -- Shaman buffs
     [L["The Eye of Diminution"]] = {
@@ -148,15 +171,60 @@ local BUFFTOOLTABLE = {
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura198',
         x = 0,
         y = 20,
-        alpha = 0.7,
-        width = 100,
-        height = 100,
+        alpha = 0.8,
+        width = 68,
+        height = 68,
         Blend = "ADD",
         Color = {1,1,1},
-        Pos = "LEFT",
+        Pos = "TOP",
         rotation = math.rad(180),
         duration = 20 -- Example duration in seconds
     },
+    [L["Stormstrike"]] = {
+        id = 45521,
+        canRefresh = true,
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\Stormstrike',
+        x = 20,
+        y = -30,
+        alpha = 1.0,
+        width = 64,
+        height = 64,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "TOPLEFT",
+        rotation = math.rad(180),
+        duration = 12 -- Example duration in seconds
+    },
+    [L["Elemental Devastation"]] = {
+        id = 29180,
+        canRefresh = true,
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\ElementalDevastation',
+        x = -40,
+        y = -30,
+        alpha = 0.8,
+        width = 64,
+        height = 64,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "TOPRIGHT",
+        rotation = math.rad(180),
+        duration = 10 -- Example duration in seconds
+    },
+    --[L["Flurry"]] = {
+    --    id = 12319,
+    --    canRefresh = false,
+    --    texture = 'Interface\\AddOns\\BuffTool\\Images\\Flurry',
+    --    x = -40,
+    --    y = -30,
+    --    alpha = 1.0,
+    --    width = 64,
+    --    height = 64,
+    --    Blend = "ADD",
+    --    Color = {1,1,1},
+    --    Pos = "TOPRIGHT",
+    --    rotation = math.rad(180),
+    --    duration = 15 -- Example duration in seconds
+    --}, 
     -- -- warlock 
     [L["Shadow Trance"]] = {
         id=17941,
@@ -214,16 +282,18 @@ local auraTexturesObjects = {}
 local auraTimersObjects = {}
 local auraTimers = {}
 
-
 local buffToolFrame = CreateFrame('FRAME')
 buffToolFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, -30)
 buffToolFrame:SetWidth(256)
 buffToolFrame:SetHeight(256)
 buffToolFrame:RegisterEvent('COMBAT_TEXT_UPDATE')
-buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS')
 buffToolFrame:RegisterEvent('PLAYER_DEAD')
+buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS')
 buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_SELF_DAMAGE')
+buffToolFrame:RegisterEvent('CHAT_MSG_COMBAT_SELF_HITS')
 -- buffToolFrame:RegisterEvent('UNIT_AURA')
+
+
 
 local function DebugAllBuffTexture()
     for spellName, auraInfo in pairs(BUFFTOOLTABLE) do
@@ -274,6 +344,8 @@ local function ShowTimer(spellName, duration, timerText)
 end
 
 
+
+
 local function HandleAuraByName(spellName, isActive)
     local auraInfo = BUFFTOOLTABLE[spellName]
     if not auraInfo then return end
@@ -300,9 +372,9 @@ local function HandleAuraByName(spellName, isActive)
         auraTimersObjects[spellName] = timerText
     end
 
-    if isActive then
+    if isActive  then
         textureObject:Show()
-        if timerText and auraInfo.duration then
+        if timerText and auraInfo.duration and auraInfo.canRefresh then
             ShowTimer(spellName, auraInfo.duration, timerText)
         end
 
@@ -345,18 +417,52 @@ end
 
 local function AuraActivated(message)
     for spellName, _ in pairs(BUFFTOOLTABLE) do
-        if string.find(message, spellName) then
+        if string.find(message, L["ARUAGET_TOKEN"]..spellName) then
             return spellName, true 
         end
     end
     return nil, false
 end
 
+local function RefreshTimeBySpell(CombatText)
+    for spellName, auraName in pairs(RREFRESH_BUFF_BY_SPELL) do
+        if string.find(CombatText, spellName) then
+            if not (string.find(CombatText, L["resisted"])) then
+                local ttt = auraTimersObjects[auraName]
+                if not ttt then return end
+                HandleAuraByName(auraName, true)
+            end
+        end
+    end
+end
+
+local function RefreshBuffByHit(CombatText)
+    for HitToken, auraNames in pairs(RREFRESH_BUFF_BY_HIT) do
+        if HitToken then
+            --print(HitToken.." " .. CombatText)
+            if string.find(CombatText, HitToken) then
+                if isDebug then print(HitToken.." " .. CombatText) end
+                for _, auraName in auraNames do
+                    if isDebug then print(auraName.." getted" ) end
+                    local ttt = auraTimersObjects[auraName]
+                    if ttt then
+                        HandleAuraByName(auraName, true)
+                    else
+                        if isDebug then print(auraName.." not found cannot refresh" )
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
 
 buffToolFrame:SetScript('OnEvent', function()
     if event == 'PLAYER_DEAD' then
         HideAllTextures()
-    elseif event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
+    end
+    if event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
         if arg1 then
             --DEFAULT_CHAT_FRAME:AddMessage(arg1)
             local auraName, _= AuraActivated(arg1)
@@ -365,21 +471,28 @@ buffToolFrame:SetScript('OnEvent', function()
                 HandleAuraByName(auraName, true )
             end
         end
-        -- Only for Electrified
-    elseif event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
+    end
+    if event =='CHAT_MSG_COMBAT_SELF_HITS' then
         if arg1 then
-            if string.find(arg1, L["Lightning Bolt"]) or string.find(arg1,L["Chain Lightning"]) then
-                if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1.." Have lighting spell") end
-                if not (string.find(arg1, L["resisted"])) then
-                    if isDebug then DEFAULT_CHAT_FRAME:AddMessage(arg1.." not resisted") end
-                    HandleAuraByName(L["Electrified"], true)
-                end
-            end
+            if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1) end
+            RefreshBuffByHit(arg1)
         end
-    elseif event == 'COMBAT_TEXT_UPDATE' and BUFFTOOLTABLE[arg2] then
-        if arg1 == 'AURA_END' then
-            if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. arg2 .. " is over") end
-            HandleAuraByName(arg2, false)
+    end
+
+    --    refresh buff by spell
+    if event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
+        if arg1 then
+            if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1) end
+            RefreshTimeBySpell(arg1)
+        end
+    end
+    --    refresh buff by hit or crit
+    if event == 'COMBAT_TEXT_UPDATE' then
+        if BUFFTOOLTABLE[arg2] then
+            if arg1 == 'AURA_END' then
+                if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. arg2 .. " is over") end
+                HandleAuraByName(arg2, false)
+            end
         end
     end
 end)
