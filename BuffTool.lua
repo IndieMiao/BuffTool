@@ -66,10 +66,10 @@ local BUFFTOOLTABLE = {
         canRefresh = false,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura71',
         x = 0,
-        y = 0,
-        alpha = 0.95,
-        width = 200,
-        height = 200,
+        y = 20,
+        alpha = 0.75,
+        width = 300,
+        height = 150,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "CENTER",
@@ -89,7 +89,7 @@ local BUFFTOOLTABLE = {
         Color = {1,1,1},
         Pos = "LEFT",
         rotation = 0,
-        duration = 20 -- Example duration in seconds
+        duration = 15 -- Example duration in seconds
     },
     [L["Clearcasting"]] = {
         id = 45542,
@@ -108,13 +108,13 @@ local BUFFTOOLTABLE = {
     },
     [L["Berserking"]] = {
         id= 26635,
-        canRefresh = false,
+        canRefresh = ture,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura226M',
-        x = 0,
+        x = 30,
         y = 0,
         alpha = 0.6,
-        width = 80,
-        height = 200,
+        width = 120,
+        height = 240,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "RIGHT",
@@ -169,14 +169,14 @@ local BUFFTOOLTABLE = {
         id = 45858,
         canRefresh = true,
         texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura198',
-        x = 0,
+        x = -20,
         y = 20,
         alpha = 0.8,
         width = 68,
         height = 68,
         Blend = "ADD",
         Color = {1,1,1},
-        Pos = "TOP",
+        Pos = "LEFT",
         rotation = math.rad(180),
         duration = 20 -- Example duration in seconds
     },
@@ -254,24 +254,28 @@ local BUFFTOOLTABLE = {
         Color = {1,1,1},
         Pos = "LEFT",
         rotation = math.rad(180),
-        duration = 25 -- Example duration in seconds
+        duration = 30 -- Example duration in seconds
     },
     -- priest
     [L["Purifying Flames"]] = {
         id=51469,
-        canRefresh = false,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura216',
+        canRefresh = true,
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\InnerFire',
         x = -30,
         y = 20,
-        alpha = 0.9,
-        width = 200,
-        height = 200,
-        Blend = "BLEND",
+        alpha = 0.8,
+        width = 80,
+        height =160, 
+        Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
         rotation = math.rad(180),
-        duration = 25 -- Example duration in seconds
+        duration = 10 -- Example duration in seconds
     }
+--    Searing Light
+--    Inner Fire
+--    Enlightened 8s
+    
 }
 
 
