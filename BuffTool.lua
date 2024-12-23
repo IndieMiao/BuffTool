@@ -20,6 +20,8 @@ L["resisted"] = "was resisted by"
 L["Stormstrike"] = "Stormstrike"
 L["Elemental Devastation"] = "Elemental Devastation"
 L["Flurry"] = "Flurry"
+L["Enlightened"] = "Enlightened"
+L["Searing Light"] = "Searing Light"
 L["ARUAGET_TOKEN"] = "You gain "
 L["You crit"] = "You crit "
 
@@ -44,6 +46,8 @@ if (GetLocale() == "zhCN") then
     L["Flurry"] = "乱舞"
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "你暴击"
+    L["Enlightened"] = "启示"
+    L["Searing Light"] = "Searing Light"
 end
 
 local REFRESH_BUFF_BY_SPELL =
@@ -53,6 +57,13 @@ local REFRESH_BUFF_BY_SPELL =
     [L["Lightning Bolt"]] = L["Electrified"],
 }
 local REFRESH_BUFF_BY_HIT = {
+    [L["You crit"]] = {
+        L["Elemental Devastation"],
+        L["Flurry"],
+        L["Clearcasting"],
+    }
+}
+local REFRESH_BUFF_BY_SPELL_CRIT = {
     [L["You crit"]] = {
         L["Elemental Devastation"],
         L["Flurry"],
@@ -271,11 +282,41 @@ local BUFFTOOLTABLE = {
         Pos = "LEFT",
         rotation = math.rad(180),
         duration = 10 -- Example duration in seconds
-    }
+    },
+    [L["Enlightened"]] = {
+        id=51469,
+        canRefresh = true,
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\AuraCrys2',
+        x = 20,
+        y = -30,
+        alpha = 1.0,
+        width = 64,
+        height = 64,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "TOPLEFT",
+        rotation = math.rad(180),
+        duration = 8 -- Example duration in seconds
+    },
+    [L["Searing Light"]] = {
+        id=51469,
+        canRefresh = false,
+        texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
+        x = 0,
+        y = 20,
+        alpha = 0.8,
+        width = 96,
+        height =96, 
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "TOP",
+        rotation = math.rad(180),
+        duration = 8 -- Example duration in seconds
+    },
+    
 --    Searing Light
 --    Inner Fire
 --    Enlightened 8s
-    
 }
 
 
