@@ -22,8 +22,10 @@ L["Elemental Devastation"] = "Elemental Devastation"
 L["Flurry"] = "Flurry"
 L["Enlightened"] = "Enlightened"
 L["Searing Light"] = "Searing Light"
+
 L["ARUAGET_TOKEN"] = "You gain "
 L["You crit"] = "You crit "
+L["SpellCrit_Token"] = "You crit "
 
 if (GetLocale() == "zhCN") then
     DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
@@ -44,10 +46,12 @@ if (GetLocale() == "zhCN") then
     L["Stormstrike"] = "风暴打击"
     L["Elemental Devastation"] = "元素浩劫"
     L["Flurry"] = "乱舞"
+    L["Enlightened"] = "启发"
+    L["Searing Light"] = "Searing Light"
+    
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "致命一击伤害"
-    L["Enlightened"] = "启示"
-    L["Searing Light"] = "Searing Light"
+    L["SpellCrit_Token"] = "致命一击对"
 end
 
 local REFRESH_BUFF_BY_SPELL =
@@ -84,7 +88,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "CENTER",
-        rotation = 0,
         duration = 20 -- Example duration in seconds
     },
     [L["Electrified"]] = {
@@ -99,7 +102,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
-        rotation = 0,
         duration = 15 -- Example duration in seconds
     },
     [L["Clearcasting"]] = {
@@ -114,7 +116,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOP",
-        rotation = 0,
         duration = 15 -- Example duration in seconds
     },
     [L["Berserking"]] = {
@@ -129,7 +130,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "RIGHT",
-        rotation = math.rad(180),
         duration = 10 -- Example duration in seconds
     },
     [L["Elemental Mastery"]] = {
@@ -144,7 +144,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOP",
-        rotation = math.rad(180),
         duration = nil-- Example duration in seconds
     },
     [L["Nature's Swiftness"]] = {
@@ -158,7 +157,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOP",
-        rotation = math.rad(180),
         duration = nil-- Example duration in seconds
     },
     [L["The Eye of the Dead"]] = {
@@ -173,7 +171,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "CENTER",
-        rotation = math.rad(180),
         duration = 30 -- Example duration in seconds
     },
     [L["Fever Dream"]] = {
@@ -188,7 +185,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
-        rotation = math.rad(180),
         duration = 20 -- Example duration in seconds
     },
     [L["Stormstrike"]] = {
@@ -203,7 +199,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOPLEFT",
-        rotation = math.rad(180),
         duration = 12 -- Example duration in seconds
     },
     [L["Elemental Devastation"]] = {
@@ -218,7 +213,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOPRIGHT",
-        rotation = math.rad(180),
         duration = 10 -- Example duration in seconds
     },
     --[L["Flurry"]] = {
@@ -249,7 +243,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
-        rotation = math.rad(180),
         duration = 10 -- Example duration in seconds
     },
     [L["Improved Soul Fire"]] = {
@@ -264,7 +257,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
-        rotation = math.rad(180),
         duration = 30 -- Example duration in seconds
     },
     -- priest
@@ -280,7 +272,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
-        rotation = math.rad(180),
         duration = 10 -- Example duration in seconds
     },
     [L["Enlightened"]] = {
@@ -295,7 +286,6 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOPLEFT",
-        rotation = math.rad(180),
         duration = 8 -- Example duration in seconds
     },
     [L["Searing Light"]] = {
@@ -310,12 +300,10 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOP",
-        rotation = math.rad(180),
         duration = 8 -- Example duration in seconds
     },
+--    Mage
     
---    Searing Light
---    Inner Fire
 --    Enlightened 8s
 }
 
