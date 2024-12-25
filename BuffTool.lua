@@ -39,7 +39,7 @@ if (GetLocale() == "zhCN") then
     L["Fever Dream"] = "狂热梦想"
     L["Shadow Trance"] = "暗影冥思"
     L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
-    L["Purifying Flames"] = "Localized Name for Purifying Flames"
+    L["Purifying Flames"] = "纯净之火"
     L["Lightning Bolt"] = "闪电箭"
     L["Chain Lightning"] = "闪电链"
     L["resisted"] = "抵抗了"
@@ -47,7 +47,7 @@ if (GetLocale() == "zhCN") then
     L["Elemental Devastation"] = "元素浩劫"
     L["Flurry"] = "乱舞"
     L["Enlightened"] = "启发"
-    L["Searing Light"] = "Searing Light"
+    L["Searing Light"] = "灼热之光"
     
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "致命一击伤害"
