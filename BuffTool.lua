@@ -45,7 +45,7 @@ if (GetLocale() == "zhCN") then
     L["Elemental Devastation"] = "元素浩劫"
     L["Flurry"] = "乱舞"
     L["ARUAGET_TOKEN"] = "你获得了"
-    L["You crit"] = "你暴击"
+    L["You crit"] = "致命一击伤害"
     L["Enlightened"] = "启示"
     L["Searing Light"] = "Searing Light"
 end
@@ -489,8 +489,8 @@ local function RefreshBuffByHit(CombatText)
                 if isDebug then print(HitToken.." " .. CombatText) end
                 for _, auraName in auraNames do
                     if isDebug then print(auraName.." getted" ) end
-                    local ttt = auraTimersObjects[auraName]
-                    if ttt then
+                    local auraTimerIns = auraTimersObjects[auraName]
+                    if auraTimerIns then
                         HandleAuraByName(auraName, true)
                     else
                         if isDebug then print(auraName.." not found cannot refresh" )
