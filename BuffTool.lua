@@ -88,7 +88,7 @@ local BUFFTOOLTABLE = {
     [L["The Eye of Diminution"]] = {
         id = 28862,
         canRefresh = false,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura71',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\Aura71'},
         x = 0,
         y = 20,
         alpha = 0.75,
@@ -102,7 +102,7 @@ local BUFFTOOLTABLE = {
     [L["Electrified"]] = {
         id = 51395,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\auraLighting'},
         x = -30,
         y = 0,
         alpha = 0.9,
@@ -116,7 +116,7 @@ local BUFFTOOLTABLE = {
     [L["Clearcasting"]] = {
         id = 45542,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Lightning2',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\Lightning2'},
         x = 0,
         y = 10,
         alpha = 0.95,
@@ -130,7 +130,7 @@ local BUFFTOOLTABLE = {
     [L["Berserking"]] = {
         id= 26635,
         canRefresh = ture,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura226M',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\Aura226M'},
         x = 30,
         y = 0,
         alpha = 0.6,
@@ -144,7 +144,7 @@ local BUFFTOOLTABLE = {
     [L["Elemental Mastery"]] = {
         id = 16166,
         canRefresh = false,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\AuroCrys'},
         x = 0,
         y = -20,
         alpha = 0.7,
@@ -157,7 +157,7 @@ local BUFFTOOLTABLE = {
     },
     [L["Nature's Swiftness"]] = {
         canRefresh = false,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\AuroCrys'},
         x = 0,
         y = -20,
         alpha = 0.8,
@@ -171,7 +171,7 @@ local BUFFTOOLTABLE = {
     [L["The Eye of the Dead"]] = {
         id=28780,
         canRefresh = false,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\AuraWing',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\AuraWing'},
         x = 0,
         y = 20, 
         alpha = 0.6,
@@ -185,7 +185,7 @@ local BUFFTOOLTABLE = {
     [L["Fever Dream"]] = {
         id = 45858,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Aura198',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\Aura198'},
         x = -20,
         y = 20,
         alpha = 0.8,
@@ -199,7 +199,7 @@ local BUFFTOOLTABLE = {
     [L["Stormstrike"]] = {
         id = 45521,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\Stormstrike',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\Stormstrike'},
         x = 20,
         y = -30,
         alpha = 1.0,
@@ -213,7 +213,7 @@ local BUFFTOOLTABLE = {
     [L["Elemental Devastation"]] = {
         id = 29180,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\ElementalDevastation',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\ElementalDevastation'},
         x = -15,
         y = -30,
         alpha = 0.8,
@@ -243,7 +243,7 @@ local BUFFTOOLTABLE = {
     [L["Shadow Trance"]] = {
         id=17941,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\AruaUni',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\AruaUni'},
         x = -30,
         y = 20,
         alpha = 0.9,
@@ -257,7 +257,7 @@ local BUFFTOOLTABLE = {
     [L["Improved Soul Fire"]] = {
         id=51735,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\FlameDragon',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\FlameDragon'},
         x = -30,
         y = 20,
         alpha = 0.9,
@@ -272,7 +272,7 @@ local BUFFTOOLTABLE = {
     [L["Purifying Flames"]] = {
         id=51469,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\InnerFire',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\InnerFire'},
         x = -40,
         y = 0,
         alpha = 0.8,
@@ -286,7 +286,7 @@ local BUFFTOOLTABLE = {
     [L["Enlightened"]] = {
         id=51469,
         canRefresh = false,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\AuraCrys2',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\AuraCrys2'},
         x = 20,
         y = -30,
         alpha = 1.0,
@@ -300,7 +300,7 @@ local BUFFTOOLTABLE = {
     [L["Searing Light"]] = {
         id=51469,
         canRefresh = true,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\AuroCrys',
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\AuroCrys'},
         x = 0,
         y = 20,
         alpha = 0.8,
@@ -315,15 +315,22 @@ local BUFFTOOLTABLE = {
     [L["Hot Streak"]] = {
         id = 28862,
         canRefresh = false,
-        texture = 'Interface\\AddOns\\BuffTool\\Images\\FlameDragon',
+        texture = {
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak1',
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak2',
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak3',
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak4',
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak5',
+        },
         x = -30,
         y = 20,
         alpha = 0.9,
-        width = 100,
-        height = 100,
+        width = 130,
+        height = 130,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
+        stack = true,
         duration = 20 -- Example duration in seconds
     },
     
@@ -402,7 +409,7 @@ end
 
 
 
-local function HandleAuraByName(spellName, isActive)
+local function HandleAuraByName(spellName, isActive, stack)
     local auraInfo = BUFFTOOLTABLE[spellName]
     if not auraInfo then return end
 
@@ -411,7 +418,6 @@ local function HandleAuraByName(spellName, isActive)
 
     if not textureObject then
         textureObject = buffToolFrame:CreateTexture(nil, 'ARTWORK')
-        textureObject:SetTexture(auraInfo.texture)
         textureObject:SetPoint('CENTER', buffToolFrame, auraInfo.Pos, auraInfo.x, auraInfo.y)
         textureObject:SetAlpha(auraInfo.alpha)
         textureObject:SetWidth(auraInfo.width)
@@ -422,13 +428,20 @@ local function HandleAuraByName(spellName, isActive)
         auraTexturesObjects[spellName] = textureObject
     end
 
+    if auraInfo.stack and stack then
+        local textureIndex = math.min(stack, table.getn(auraInfo.texture))
+        textureObject:SetTexture(auraInfo.texture[textureIndex])
+    else
+        textureObject:SetTexture(auraInfo.texture[1])
+    end
+
     if not timerText then
         timerText = buffToolFrame:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
         timerText:SetPoint('CENTER', textureObject)
         auraTimersObjects[spellName] = timerText
     end
 
-    if isActive  then
+    if isActive then
         textureObject:Show()
         if timerText and auraInfo.duration and auraInfo.canRefresh then
             ShowTimer(spellName, auraInfo.duration, timerText)
@@ -517,15 +530,14 @@ buffToolFrame:SetScript('OnEvent', function()
     if event == 'PLAYER_DEAD' then
         HideAllTextures()
     end
-    if event =="CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
+    if event == "CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
         if arg1 then
-            --DEFAULT_CHAT_FRAME:AddMessage(arg1)
-            local auraName, _= IsAuraActived(arg1)
+            local auraName, _ = IsAuraActived(arg1)
             local stack = GetAuraStacks(arg1)
             if auraName then
-                DebugLog("buffTool : " .. auraName .. " Stack")
+                DebugLog("buffTool : " .. auraName .. " ".. stack)
                 if isDebug then DebugLog("buffTool : " .. auraName .. " is start") end
-                HandleAuraByName(auraName, true )
+                HandleAuraByName(auraName, true, stack)
             end
         end
     end
