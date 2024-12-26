@@ -29,6 +29,7 @@ L["Hot Streak"] = "Hot Streak"
 L["ARUAGET_TOKEN"] = "You gain "
 L["You crit"] = "You crit "
 L["SpellCrit_Token"] = "You crit "
+L["AURASTACK_TOKEN"] = "%((%d+)%)"
 
 -- Hot Streak 60s*3 Stack 5
 
@@ -55,11 +56,12 @@ if (GetLocale() == "zhCN") then
     L["Searing Light"] = "灼热之光"
     
     --法师
-    L["Hot Streak"] = "Hot Streak"
+    L["Hot Streak"] = "法术连击"
     
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "致命一击伤害"
     L["SpellCrit_Token"] = "致命一击对"
+    L["AURASTACK_TOKEN"] = "%（(%d+)%）。"
 end
 
 local REFRESH_BUFF_BY_SPELL =
@@ -474,7 +476,7 @@ end
 
 local function GetAuraStacks(message)
     if not message then return  nil end
-    local stackStart, stackStop, stack= string.find(message, "%((%d+)%)", stop)
+    local stackStart, stackStop, stack= string.find(message, L[AURASTACK_TOKEN], stop)
     if not stackStart then return nil end
     return tonumber(stack)
 end
