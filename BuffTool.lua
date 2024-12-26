@@ -476,7 +476,7 @@ end
 
 local function GetAuraStacks(message)
     if not message then return  nil end
-    local stackStart, stackStop, stack= string.find(message, L[AURASTACK_TOKEN], stop)
+    local stackStart, stackStop, stack= string.find(message, L["AURASTACK_TOKEN"], stop)
     if not stackStart then return nil end
     return tonumber(stack)
 end
