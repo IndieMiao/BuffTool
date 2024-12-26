@@ -61,7 +61,7 @@ if (GetLocale() == "zhCN") then
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "致命一击伤害"
     L["SpellCrit_Token"] = "致命一击对"
-    L["AURASTACK_TOKEN"] = "%（(%d+)%）"
+    L["AURASTACK_TOKEN"] = "（(%d+)）"
 end
 
 local REFRESH_BUFF_BY_SPELL =
@@ -476,9 +476,9 @@ end
 
 local function GetAuraStacks(message)
     if not message then return  nil end
-    local stackStart, stackStop, stack= string.find(message, L["AURASTACK_TOKEN"], stop)
-    if not stackStart then return nil end
-    return tonumber(stack)
+    local stackStart, stackStop, stack= string.find(message, L["AURASTACK_TOKEN"])
+    if stack then return stack end
+    return nil
 end
 
 local function IsAuraActived(message)
