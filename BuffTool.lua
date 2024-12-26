@@ -68,10 +68,11 @@ local REFRESH_BUFF_BY_HIT = {
     }
 }
 local REFRESH_BUFF_BY_SPELL_CRIT = {
-    [L["You crit"]] = {
+    [L["SpellCrit_Token"]] = {
         L["Elemental Devastation"],
         L["Flurry"],
         L["Clearcasting"],
+        L["Searing Light"] 
     }
 }
 local BUFFTOOLTABLE = {
@@ -469,8 +470,8 @@ local function RefreshTimeBySpell(CombatText)
     end
 end
 
-local function RefreshBuffByHit(CombatText)
-    for HitToken, auraNames in pairs(REFRESH_BUFF_BY_HIT) do
+local function RefreshBuffByHit(CombatText,CheckTable)
+    for HitToken, auraNames in pairs(CheckTable) do
         if HitToken then
             --print(HitToken.." " .. CombatText)
             if string.find(CombatText, HitToken) then
@@ -509,7 +510,7 @@ buffToolFrame:SetScript('OnEvent', function()
     if event =='CHAT_MSG_COMBAT_SELF_HITS' then
         if arg1 then
             if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1) end
-            RefreshBuffByHit(arg1)
+            RefreshBuffByHit(arg1, REFRESH_BUFF_BY_HIT)
         end
     end
 
@@ -518,6 +519,7 @@ buffToolFrame:SetScript('OnEvent', function()
         if arg1 then
             if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1) end
             RefreshTimeBySpell(arg1)
+            RefreshBuffByHit(arg1, REFRESH_BUFF_BY_SPELL_CRIT)
         end
     end
     --   buff over  
