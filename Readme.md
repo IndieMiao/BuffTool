@@ -1,10 +1,16 @@
-Mpwoa crashing in my twow, so i write this Addon to display some battle buffs for Shamman and warlock
+Mpwoa crashing in my twow, so i write this Addon to display some combat buffs for my characters , now works for Shaman Warlock and Priest
 
-Only tested in turtle wow 1.17.2
+**Only tested and works in turtle wow 1.17.2**
 
-Might add some features in future:
-- buff count down(Done)
-- stack display(wip)
-- more class or build support
-- Maybe Priest, Mage
+# Features:
+- Cool buff image
+- Shaman,Warlock,Priest
+- Support some trinkles
+- Buff Timers
+
+# RoadMap:
+- Buff Stacks (wip)
+- More class or spec support
+- Next Step: Mage(wip) , Rouge, Palla...
+- User interface and customize?(maybe)
 

@@ -1,7 +1,7 @@
 ## Interface: 11200
 ## Title: BuffTool
 ## Author: Mythblack
-## Notes: Black Morass Corrupted Sand BoP Accept
-## Version: 0.0001
+## Notes: Monitor some combat buff
+## Version: 0.0002
 
 BuffTool.lua
