@@ -25,6 +25,7 @@ L["Searing Light"] = "Searing Light"
 
 --Mage
 L["Hot Streak"] = "Hot Streak"
+L["Flash Freeze"] = "Flash Freeze"
 
 L["ARUAGET_TOKEN"] = "You gain "
 L["You crit"] = "You crit "
@@ -57,6 +58,7 @@ if (GetLocale() == "zhCN") then
     
     --法师
     L["Hot Streak"] = "法术连击"
+    L["Flash Freeze"] = "冰霜速冻"
     
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "致命一击伤害"
@@ -104,7 +106,10 @@ local BUFFTOOLTABLE = {
     [L["Electrified"]] = {
         id = 51395,
         canRefresh = true,
-        texture = {'Interface\\AddOns\\BuffTool\\Images\\auraLighting'},
+        texture = {
+            'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
+            'Interface\\AddOns\\BuffTool\\Images\\auraLighting5',
+        },
         x = -30,
         y = 0,
         alpha = 0.9,
@@ -113,6 +118,7 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
+        stack=true,
         duration = 15 -- Example duration in seconds
     },
     [L["Clearcasting"]] = {
@@ -335,8 +341,26 @@ local BUFFTOOLTABLE = {
         stack = true,
         duration = 20 -- Example duration in seconds
     },
+    [L["Flash Freeze"]] = {
+        id = 28862,
+        canRefresh = true,
+        texture = {
+            'Interface\\AddOns\\BuffTool\\Images\\FlashFreeze',
+        },
+        x = -30,
+        y = 20,
+        alpha = 0.9,
+        width = 100,
+        height = 200,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "LEFT",
+        stack = true,
+        duration = 8 -- Example duration in seconds
+    },
     
 --    Enlightened 8s
+--    flash freeze
 }
 
 
