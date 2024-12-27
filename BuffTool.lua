@@ -537,8 +537,7 @@ buffToolFrame:SetScript('OnEvent', function()
             local auraName, _ = IsAuraActived(arg1)
             local stack = GetAuraStacks(arg1)
             if auraName then
-                if stack then DebugLog("buffTool : " .. auraName .. " ".. stack) end
-                if isDebug then DebugLog("buffTool : " .. auraName .. " is start") end
+                if stack and isDebug then DebugLog("buffTool : " .. auraName .. " ".. stack) end
                 HandleAuraByName(auraName, true, stack)
             end
         end
