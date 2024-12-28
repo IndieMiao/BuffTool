@@ -139,11 +139,11 @@ local BUFFTOOLTABLE = {
         id= 26635,
         canRefresh = ture,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\Aura226M'},
-        x = 30,
+        x = 40,
         y = 0,
         alpha = 0.6,
-        width = 120,
-        height = 240,
+        width = 100,
+        height = 200,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "RIGHT",
@@ -435,30 +435,32 @@ end
 
 
 
-local function HandleAuraByName(spellName, isActive, stack)
+local function HandleAuraByName(spellName, isActive, updateOnlyTimer,stack)
     local auraInfo = BUFFTOOLTABLE[spellName]
     if not auraInfo then return end
 
     local textureObject = auraTexturesObjects[spellName]
     local timerText = auraTimersObjects[spellName]
 
-    if not textureObject then
-        textureObject = buffToolFrame:CreateTexture(nil, 'ARTWORK')
-        textureObject:SetPoint('CENTER', buffToolFrame, auraInfo.Pos, auraInfo.x, auraInfo.y)
-        textureObject:SetAlpha(auraInfo.alpha)
-        textureObject:SetWidth(auraInfo.width)
-        textureObject:SetHeight(auraInfo.height)
-        textureObject:SetBlendMode(auraInfo.Blend)
-        textureObject:SetVertexColor(auraInfo.Color[1], auraInfo.Color[2], auraInfo.Color[3])
-        textureObject:Show()
-        auraTexturesObjects[spellName] = textureObject
-    end
+    if not updateOnlyTimer then
+        if not textureObject then
+            textureObject = buffToolFrame:CreateTexture(nil, 'ARTWORK')
+            textureObject:SetPoint('CENTER', buffToolFrame, auraInfo.Pos, auraInfo.x, auraInfo.y)
+            textureObject:SetAlpha(auraInfo.alpha)
+            textureObject:SetWidth(auraInfo.width)
+            textureObject:SetHeight(auraInfo.height)
+            textureObject:SetBlendMode(auraInfo.Blend)
+            textureObject:SetVertexColor(auraInfo.Color[1], auraInfo.Color[2], auraInfo.Color[3])
+            textureObject:Show()
+            auraTexturesObjects[spellName] = textureObject
+        end
 
-    if auraInfo.stack and stack then
-        local textureIndex = math.min(stack, table.getn(auraInfo.texture))
-        textureObject:SetTexture(auraInfo.texture[textureIndex])
-    else
-        textureObject:SetTexture(auraInfo.texture[1])
+        if auraInfo.stack and stack then
+            local textureIndex = math.min(stack, table.getn(auraInfo.texture))
+            textureObject:SetTexture(auraInfo.texture[textureIndex])
+        else
+            textureObject:SetTexture(auraInfo.texture[1])
+        end
     end
 
     if not timerText then
@@ -468,14 +470,18 @@ local function HandleAuraByName(spellName, isActive, stack)
     end
 
     if isActive then
-        textureObject:Show()
+        if not updateOnlyTimer then
+            textureObject:Show()
+        end
         if timerText and auraInfo.duration and auraInfo.canRefresh then
             ShowTimer(spellName, auraInfo.duration, timerText)
         end
 
         if isDebug then DEFAULT_CHAT_FRAME:AddMessage(spellName .. ' is active') end
     else
-        textureObject:Hide()
+        if not updateOnlyTimer then
+            textureObject:Hide()
+        end
         if timerText then
             timerText:Hide()
         end
@@ -520,7 +526,7 @@ local function RefreshTimeBySpell(CombatText)
             if not (string.find(CombatText, L["resisted"])) then
                 local ttt = auraTimersObjects[auraName]
                 if not ttt then return end
-                HandleAuraByName(auraName, true)
+                HandleAuraByName(auraName, true, true)
             end
         end
     end
@@ -536,7 +542,7 @@ local function RefreshBuffByHit(CombatText,CheckTable)
                     if isDebug then print(auraName.." getted" ) end
                     local auraTimerIns = auraTimersObjects[auraName]
                     if auraTimerIns then
-                        HandleAuraByName(auraName, true)
+                        HandleAuraByName(auraName, true, true)
                     else
                         if isDebug then print(auraName.." not found cannot refresh" )
                         end
@@ -562,7 +568,7 @@ buffToolFrame:SetScript('OnEvent', function()
             local stack = GetAuraStacks(arg1)
             if auraName then
                 if stack and isDebug then DebugLog("buffTool : " .. auraName .. " ".. stack) end
-                HandleAuraByName(auraName, true, stack)
+                HandleAuraByName(auraName, true, false ,stack)
             end
         end
     end
@@ -587,7 +593,7 @@ buffToolFrame:SetScript('OnEvent', function()
         if BUFFTOOLTABLE[arg2] then
             if arg1 == 'AURA_END' then
                 if isDebug then DEFAULT_CHAT_FRAME:AddMessage("buffTool : " .. arg2 .. " is over") end
-                HandleAuraByName(arg2, false)
+                HandleAuraByName(arg2, false, false)
             end
         end
     end
