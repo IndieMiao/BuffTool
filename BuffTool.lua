@@ -22,6 +22,7 @@ L["Elemental Devastation"] = "Elemental Devastation"
 L["Flurry"] = "Flurry"
 L["Enlightened"] = "Enlightened"
 L["Searing Light"] = "Searing Light"
+L["Seeking Thunder"] = "Seeking Thunder"
 
 --Mage
 L["Hot Streak"] = "Hot Streak"
@@ -55,6 +56,7 @@ if (GetLocale() == "zhCN") then
     L["Flurry"] = "乱舞"
     L["Enlightened"] = "启发"
     L["Searing Light"] = "灼热之光"
+    L["Seeking Thunder"] = "Seeking Thunder"
     
     --法师
     L["Hot Streak"] = "法术连击"
@@ -111,15 +113,31 @@ local BUFFTOOLTABLE = {
             'Interface\\AddOns\\BuffTool\\Images\\auraLighting5',
         },
         x = -30,
-        y = 0,
+        y = -30,
         alpha = 0.9,
-        width = 160,
-        height = 160,
+        width = 130,
+        height = 130,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
         stack=true,
         duration = 15 -- Example duration in seconds
+    },
+    [L["Seeking Thunder"]] = {
+        id = 28861,
+        canRefresh = true,
+        texture = {
+            'Interface\\AddOns\\BuffTool\\Images\\SeekingThunder',
+        },
+        x = -30,
+        y = -60,
+        alpha = 1.0,
+        width = 100,
+        height = 50,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "TOPLEFT",
+        duration = 8 -- Example duration in seconds
     },
     [L["Clearcasting"]] = {
         id = 45542,
@@ -208,11 +226,11 @@ local BUFFTOOLTABLE = {
         id = 45521,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\Stormstrike'},
-        x = 20,
+        x = 30,
         y = -30,
         alpha = 1.0,
-        width = 64,
-        height = 64,
+        width = 50,
+        height = 50,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOPLEFT",
@@ -222,11 +240,11 @@ local BUFFTOOLTABLE = {
         id = 29180,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\ElementalDevastation'},
-        x = -15,
+        x = -35,
         y = -30,
         alpha = 0.8,
-        width = 64,
-        height = 64,
+        width = 50,
+        height = 50,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOPRIGHT",
@@ -373,8 +391,8 @@ local auraTimers = {}
 
 local buffToolFrame = CreateFrame('FRAME')
 buffToolFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, -30)
-buffToolFrame:SetWidth(256)
-buffToolFrame:SetHeight(256)
+buffToolFrame:SetWidth(300)
+buffToolFrame:SetHeight(300)
 buffToolFrame:RegisterEvent('COMBAT_TEXT_UPDATE')
 buffToolFrame:RegisterEvent('PLAYER_DEAD')
 buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS')
