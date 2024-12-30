@@ -28,6 +28,10 @@ L["Seeking Thunder"] = "Seeking Thunder"
 L["Hot Streak"] = "Hot Streak"
 L["Flash Freeze"] = "Flash Freeze"
 
+--Rogue
+L["Relentless Strikes"] = "Relentless Strikes"
+
+
 L["ARUAGET_TOKEN"] = "You gain "
 L["You crit"] = "You crit "
 L["SpellCrit_Token"] = "You crit "
@@ -61,6 +65,9 @@ if (GetLocale() == "zhCN") then
     --法师
     L["Hot Streak"] = "法术连击"
     L["Flash Freeze"] = "冰霜速冻"
+    
+    --盗贼
+    L["Relentless Strikes"] = "无情"
     
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "致命一击伤害"
@@ -137,7 +144,7 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOPLEFT",
-        duration = 8 -- Example duration in seconds
+        duration = 10 -- Example duration in seconds
     },
     [L["Clearcasting"]] = {
         id = 45542,
@@ -376,6 +383,30 @@ local BUFFTOOLTABLE = {
         stack = true,
         duration = 8 -- Example duration in seconds
     },
+
+    --    Rogue
+    [L["Relentless Strikes"]] = {
+        id = 14179,
+        canRefresh = false,
+        texture = {
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak1',
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak2',
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak3',
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak4',
+            'Interface\\AddOns\\BuffTool\\Images\\HotStreak5',
+        },
+        x = -10,
+        y = 20,
+        alpha = 0.9,
+        width = 80,
+        height = 80,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "LEFT",
+        stack = true,
+        duration = 30 -- Example duration in seconds
+    },
+    
     
 --    Enlightened 8s
 --    flash freeze
