@@ -67,7 +67,7 @@ if (GetLocale() == "zhCN") then
     L["Flash Freeze"] = "冰霜速冻"
     
     --盗贼
-    L["Relentless Strikes"] = "无情"
+    L["Relentless Strikes"] = "无情打击"
     
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "致命一击伤害"
