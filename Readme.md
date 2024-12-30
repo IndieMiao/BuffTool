@@ -9,7 +9,6 @@ Mpwoa crashing in my twow, so i write this Addon to display some combat buffs fo
 - Buff Timers
 
 # RoadMap:
-- Buff Stacks (wip)
 - More class or spec support
 - Next Step: Mage(wip) , Rouge, Palla...
 - User interface and customize?(maybe)
