@@ -1,8 +1,29 @@
 -- blend mode :DISABLE, BLEND, ALPHAKEY, ADD, MOD
-local iconSize = 16;
+BuffTool = CreateFrame('FRAME')
+BuffTool:SetPoint('CENTER', UIParent, 'CENTER', 0, -30)
+BuffTool:SetWidth(300)
+BuffTool:SetHeight(300)
+BuffTool:RegisterEvent('COMBAT_TEXT_UPDATE')
+BuffTool:RegisterEvent('PLAYER_DEAD')
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS')
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_SELF_DAMAGE')
+BuffTool:RegisterEvent('CHAT_MSG_COMBAT_SELF_HITS')
+-- For windfury weapon and rockbiter weapon
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_ITEM_ENCHANTMENTS')
+-- For water shield for shaman 
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_SELF_BUFF')
+
+BuffTool:RegisterEvent('BIND_ENCHANT')
+
+local isDebug = false
+local isDebugTexture = false
+
+local auraTexturesObjects = {}
+local auraTimersObjects = {}
+local auraTimers = {}
+
 local L = {}
 
-DEFAULT_CHAT_FRAME:AddMessage("BuffTool : English")
 L["The Eye of Diminution"] = "The Eye of Diminution"
 L["Electrified"] = "Electrified"
 L["Clearcasting"] = "Clearcasting"
@@ -23,24 +44,21 @@ L["Flurry"] = "Flurry"
 L["Enlightened"] = "Enlightened"
 L["Searing Light"] = "Searing Light"
 L["Seeking Thunder"] = "Seeking Thunder"
+L["Water Shield"] = "Water Shield"
 
---Mage
+-- Mage
 L["Hot Streak"] = "Hot Streak"
 L["Flash Freeze"] = "Flash Freeze"
 
---Rogue
+-- Rogue
 L["Relentless Strikes"] = "Relentless Strikes"
-
 
 L["ARUAGET_TOKEN"] = "You gain "
 L["You crit"] = "You crit "
 L["SpellCrit_Token"] = "You crit "
 L["AURASTACK_TOKEN"] = "%((%d+)%)"
 
--- Hot Streak 60s*3 Stack 5
-
 if (GetLocale() == "zhCN") then
-    DEFAULT_CHAT_FRAME:AddMessage("BuffTool : Simplified Chinese")
     L["The Eye of Diminution"] = "衰落之眼"
     L["Electrified"] = "充电"
     L["Clearcasting"] = "节能施法"
@@ -61,19 +79,21 @@ if (GetLocale() == "zhCN") then
     L["Enlightened"] = "启发"
     L["Searing Light"] = "灼热之光"
     L["Seeking Thunder"] = "Seeking Thunder"
-    
-    --法师
+    L["Water Shield"] = "Water Shield"
+
+    -- 法师
     L["Hot Streak"] = "法术连击"
     L["Flash Freeze"] = "冰霜速冻"
-    
-    --盗贼
+
+    -- 盗贼
     L["Relentless Strikes"] = "无情打击"
-    
+
     L["ARUAGET_TOKEN"] = "你获得了"
     L["You crit"] = "致命一击伤害"
     L["SpellCrit_Token"] = "致命一击对"
     L["AURASTACK_TOKEN"] = "（(%d+)）"
 end
+local iconSize = 16;
 
 local REFRESH_BUFF_BY_SPELL =
 {
@@ -257,6 +277,21 @@ local BUFFTOOLTABLE = {
         Pos = "TOPRIGHT",
         duration = 10 -- Example duration in seconds
     },
+    [L["Water Shield"]] = {
+        id = 29180,
+        canRefresh = false,
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\WaterShield'},
+        x = -20,
+        y = -30,
+        alpha = 0.9,
+        width = 48,
+        height = 48,
+        Blend = "BLEND",
+        Color = {1,1,1},
+        Pos = "RIGHT",
+        duration = 10 -- Example duration in seconds
+    },
+    
     --[L["Flurry"]] = {
     --    id = 12319,
     --    canRefresh = false,
@@ -413,32 +448,12 @@ local BUFFTOOLTABLE = {
 }
 
 
-local isDebug = false 
-local isDebugTexture = false
-
-local auraTexturesObjects = {}
-local auraTimersObjects = {}
-local auraTimers = {}
-
-local buffToolFrame = CreateFrame('FRAME')
-buffToolFrame:SetPoint('CENTER', UIParent, 'CENTER', 0, -30)
-buffToolFrame:SetWidth(300)
-buffToolFrame:SetHeight(300)
-buffToolFrame:RegisterEvent('COMBAT_TEXT_UPDATE')
-buffToolFrame:RegisterEvent('PLAYER_DEAD')
-buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS')
-buffToolFrame:RegisterEvent('CHAT_MSG_SPELL_SELF_DAMAGE')
-buffToolFrame:RegisterEvent('CHAT_MSG_COMBAT_SELF_HITS')
--- buffToolFrame:RegisterEvent('UNIT_AURA')
-
-
-
 local function DebugAllBuffTexture()
     for spellName, auraInfo in pairs(BUFFTOOLTABLE) do
         if not auraTexturesObjects[spellName] then
-            local textureObject = buffToolFrame:CreateTexture(nil, 'ARTWORK')
+            local textureObject = BuffTool:CreateTexture(nil, 'ARTWORK')
             textureObject:SetTexture(auraInfo.texture)
-            textureObject:SetPoint('CENTER', buffToolFrame, auraInfo.Pos, auraInfo.x, auraInfo.y)
+            textureObject:SetPoint('CENTER', BuffTool, auraInfo.Pos, auraInfo.x, auraInfo.y)
             textureObject:SetAlpha(auraInfo.alpha)
             textureObject:SetWidth(auraInfo.width)
             textureObject:SetHeight(auraInfo.height)
@@ -447,7 +462,7 @@ local function DebugAllBuffTexture()
             textureObject:Show()
             auraTexturesObjects[spellName] = textureObject
 
-            local timerText = buffToolFrame:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
+            local timerText = BuffTool:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
             timerText:SetPoint('CENTER', textureObject)
             auraTimersObjects[spellName] = timerText
         end
@@ -493,8 +508,8 @@ local function HandleAuraByName(spellName, isActive, updateOnlyTimer,stack)
 
     if not updateOnlyTimer then
         if not textureObject then
-            textureObject = buffToolFrame:CreateTexture(nil, 'ARTWORK')
-            textureObject:SetPoint('CENTER', buffToolFrame, auraInfo.Pos, auraInfo.x, auraInfo.y)
+            textureObject = BuffTool:CreateTexture(nil, 'ARTWORK')
+            textureObject:SetPoint('CENTER', BuffTool, auraInfo.Pos, auraInfo.x, auraInfo.y)
             textureObject:SetAlpha(auraInfo.alpha)
             textureObject:SetWidth(auraInfo.width)
             textureObject:SetHeight(auraInfo.height)
@@ -513,7 +528,7 @@ local function HandleAuraByName(spellName, isActive, updateOnlyTimer,stack)
     end
 
     if not timerText then
-        timerText = buffToolFrame:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
+        timerText = BuffTool:CreateFontString(nil, 'OVERLAY', 'SubZoneTextFont')
         timerText:SetPoint('CENTER', textureObject)
         auraTimersObjects[spellName] = timerText
     end
@@ -603,11 +618,11 @@ local function RefreshBuffByHit(CombatText,CheckTable)
 end
 
 local function DebugLog(message)  
-    DEFAULT_CHAT_FRAME:AddMessage(message)
+    DEFAULT_CHAT_FRAME:AddMessage("BUFFTOOL: "..message)
 end
 
 
-buffToolFrame:SetScript('OnEvent', function()
+BuffTool:SetScript('OnEvent', function()
     if event == 'PLAYER_DEAD' then
         HideAllTextures()
     end
@@ -628,6 +643,22 @@ buffToolFrame:SetScript('OnEvent', function()
             RefreshBuffByHit(arg1, REFRESH_BUFF_BY_HIT)
         end
     end
+    -- item CHAT_MSG_SPELL_ITEM_ENCHANTMENTS
+    if event == 'BIND_ENCHANT' then
+        if isDebug then DebugLog("buffTool : " .. arg1) end
+        if arg1 then
+            if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1) end
+            --RefreshBuffByHit(arg1, REFRESH_BUFF_BY_HIT)
+        end
+    end
+    -- water shield
+    if event == 'CHAT_MSG_SPELL_SELF_BUFF' then
+        if arg1 then
+            if isDebug then
+                DebugLog("self_buff: "..arg1)
+            end
+        end
+    end
 
     --   spell hit 
     if event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
@@ -637,6 +668,7 @@ buffToolFrame:SetScript('OnEvent', function()
             RefreshBuffByHit(arg1, REFRESH_BUFF_BY_SPELL_CRIT)
         end
     end
+    
     --   buff over  
     if event == 'COMBAT_TEXT_UPDATE' then
         if BUFFTOOLTABLE[arg2] then
