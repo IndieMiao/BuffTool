@@ -49,6 +49,7 @@ L["Water Shield"] = "Water Shield"
 -- Mage
 L["Hot Streak"] = "Hot Streak"
 L["Flash Freeze"] = "Flash Freeze"
+L["Temporal Convergence"] = "Temporal Convergence"
 
 -- Rogue
 L["Relentless Strikes"] = "Relentless Strikes"
@@ -84,6 +85,7 @@ if (GetLocale() == "zhCN") then
     -- 法师
     L["Hot Streak"] = "法术连击"
     L["Flash Freeze"] = "冰霜速冻"
+    L["Temporal Convergence"] = "时间融合"
 
     -- 盗贼
     L["Relentless Strikes"] = "无情打击"
@@ -171,13 +173,13 @@ local BUFFTOOLTABLE = {
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\Lightning2'},
         x = 0,
-        y = 10,
-        alpha = 0.4,
+        y = 90,
+        alpha = 0.8,
         width = 64,
         height = 64,
         Blend = "ADD",
         Color = {1,1,1},
-        Pos = "TOP",
+        Pos = "LEFT",
         duration = 15 -- Example duration in seconds
     },
     [L["Berserking"]] = {
@@ -417,6 +419,23 @@ local BUFFTOOLTABLE = {
         Pos = "LEFT",
         stack = true,
         duration = 8 -- Example duration in seconds
+    },
+    [L["Temporal Convergence"]] = {
+        id = 51395,
+        canRefresh = true,
+        texture = {
+            'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
+        },
+        x = -30,
+        y = -30,
+        alpha = 0.9,
+        width = 130,
+        height = 130,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "LEFT",
+        stack=true,
+        duration = 12 -- Example duration in seconds
     },
 
     --    Rogue
