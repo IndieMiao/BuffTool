@@ -23,6 +23,9 @@ local auraTimersObjects = {}
 local auraTimers = {}
 
 local L = {}
+local _,PlayerClass = UnitClass("player")
+
+local ArcaneSurgeTimer = nil
 
 L["The Eye of Diminution"] = "The Eye of Diminution"
 L["Electrified"] = "Electrified"
@@ -50,6 +53,10 @@ L["Water Shield"] = "Water Shield"
 L["Hot Streak"] = "Hot Streak"
 L["Flash Freeze"] = "Flash Freeze"
 L["Temporal Convergence"] = "Temporal Convergence"
+L["Arcane Power"] = "Arcane Power"
+L["Arcane Surge"] = "Arcane Surge"
+
+L["Surge_Casted_Token"] = "Your Arcane Surge"
 
 -- Rogue
 L["Relentless Strikes"] = "Relentless Strikes"
@@ -58,6 +65,7 @@ L["ARUAGET_TOKEN"] = "You gain "
 L["You crit"] = "You crit "
 L["SpellCrit_Token"] = "You crit "
 L["AURASTACK_TOKEN"] = "%((%d+)%)"
+L["resisted"] = "resisted"
 
 if (GetLocale() == "zhCN") then
     L["The Eye of Diminution"] = "衰落之眼"
@@ -86,6 +94,11 @@ if (GetLocale() == "zhCN") then
     L["Hot Streak"] = "法术连击"
     L["Flash Freeze"] = "冰霜速冻"
     L["Temporal Convergence"] = "时间融合"
+    L["Arcane Power"] = "奥术强化"
+    L["Arcane Surge"] = "奥术涌动"
+
+    L["Surge_Casted_Token"] = "你得奥术涌动"
+
 
     -- 盗贼
     L["Relentless Strikes"] = "无情打击"
@@ -94,6 +107,7 @@ if (GetLocale() == "zhCN") then
     L["You crit"] = "致命一击伤害"
     L["SpellCrit_Token"] = "致命一击对"
     L["AURASTACK_TOKEN"] = "（(%d+)）"
+    L["resisted"] = "抵抗"
 end
 local iconSize = 16;
 
@@ -118,6 +132,12 @@ local REFRESH_BUFF_BY_SPELL_CRIT = {
         L["Searing Light"] 
     }
 }
+--local REFRESH_BUFF_BY_SPELL_RESISTED = {
+--    [L["resisted"]] = {
+--        L["Arcane Surge"],
+--    }
+--}
+
 local BUFFTOOLTABLE = {
     -- Shaman buffs
     [L["The Eye of Diminution"]] = {
@@ -132,7 +152,8 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "CENTER",
-        duration = 20 -- Example duration in seconds
+        duration = 20,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Electrified"]] = {
         id = 51395,
@@ -150,7 +171,8 @@ local BUFFTOOLTABLE = {
         Color = {1,1,1},
         Pos = "LEFT",
         stack=true,
-        duration = 15 -- Example duration in seconds
+        duration = 15,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Seeking Thunder"]] = {
         id = 28861,
@@ -166,7 +188,8 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOPLEFT",
-        duration = 10 -- Example duration in seconds
+        duration = 10,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Clearcasting"]] = {
         id = 45542,
@@ -180,7 +203,8 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "LEFT",
-        duration = 15 -- Example duration in seconds
+        duration = 15,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Berserking"]] = {
         id= 26635,
@@ -194,7 +218,8 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "RIGHT",
-        duration = 10 -- Example duration in seconds
+        duration = 10,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Elemental Mastery"]] = {
         id = 16166,
@@ -208,7 +233,8 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOP",
-        duration = nil-- Example duration in seconds
+        duration = nil,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Nature's Swiftness"]] = {
         canRefresh = false,
@@ -309,6 +335,9 @@ local BUFFTOOLTABLE = {
     --    rotation = math.rad(180),
     --    duration = 15 -- Example duration in seconds
     --}, 
+    
+    
+    
     -- -- warlock 
     [L["Shadow Trance"]] = {
         id=17941,
@@ -338,6 +367,9 @@ local BUFFTOOLTABLE = {
         Pos = "LEFT",
         duration = 30 -- Example duration in seconds
     },
+    
+    
+    
     -- priest
     [L["Purifying Flames"]] = {
         id=51469,
@@ -381,6 +413,9 @@ local BUFFTOOLTABLE = {
         Pos = "TOP",
         duration = 8 -- Example duration in seconds
     },
+    
+    
+    
 --    Mage
     [L["Hot Streak"]] = {
         id = 28862,
@@ -437,8 +472,26 @@ local BUFFTOOLTABLE = {
         stack=true,
         duration = 12 -- Example duration in seconds
     },
+    [L["Arcane Surge"]] = {
+        id = 51395,
+        canRefresh = true,
+        texture = {
+            'Interface\\AddOns\\BuffTool\\Images\\ArcaneSurge2',
+        },
+        x = 0,
+        y = 10,
+        alpha = .8,
+        width = 76,
+        height = 76,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "TOPLEFT",
+        stack=false,
+        duration = 4, -- Example duration in seconds
+        resistedfresh = true,
+    },
 
-    --    Rogue
+    --    Rogu
     [L["Relentless Strikes"]] = {
         id = 14179,
         canRefresh = false,
@@ -640,6 +693,31 @@ local function DebugLog(message)
     DEFAULT_CHAT_FRAME:AddMessage("BUFFTOOL: "..message)
 end
 
+local function HandleSelfDestroyAura(spellName, delay)
+    if not spellName or not delay then return end
+    if ArcaneSurgeTimer then
+        ArcaneSurgeTimer:SetScript('OnUpdate', nil)
+        ArcaneSurgeTimer = nil
+    end
+    --if auraTimersObjects[spellName] then
+        HandleAuraByName(spellName,true,false)
+        
+    --end
+    --else
+    --    HandleAuraByName(spellName,true,false)
+    --end
+
+    local timer = CreateFrame('FRAME')
+    timer.start = GetTime()
+    ArcaneSurgeTimer = timer
+    timer:SetScript('OnUpdate', function()
+        if GetTime() >= (this.start + delay) then
+            HandleAuraByName(spellName, false, false)
+            this:SetScript('OnUpdate', nil)
+        end
+    end)
+end
+
 
 BuffTool:SetScript('OnEvent', function()
     if event == 'PLAYER_DEAD' then
@@ -679,12 +757,22 @@ BuffTool:SetScript('OnEvent', function()
         end
     end
 
-    --   spell hit 
+    --   spell hit  and Arcane surge
     if event=='CHAT_MSG_SPELL_SELF_DAMAGE' then
         if arg1 then
             if isDebug then  DEFAULT_CHAT_FRAME:AddMessage(arg1) end
             RefreshTimeBySpell(arg1)
             RefreshBuffByHit(arg1, REFRESH_BUFF_BY_SPELL_CRIT)
+
+            if(PlayerClass == "MAGE") then
+                if string.find(arg1,L["resisted"]) then
+                    HandleSelfDestroyAura(L["Arcane Surge"], 4)
+                end
+                if string.find(arg1,L["Surge_Casted_Token"]) then
+                    --if isDebug then DEFAULT_CHAT_FRAME:AddMessage("Arcane Surge Casted") end
+                    HandleAuraByName(L["Arcane Surge"], false, false)
+                end
+            end
         end
     end
     
