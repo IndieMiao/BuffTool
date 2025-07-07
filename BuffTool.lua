@@ -27,14 +27,11 @@ local _,PlayerClass = UnitClass("player")
 
 local ArcaneSurgeTimer = nil
 
-L["The Eye of Diminution"] = "The Eye of Diminution"
 L["Electrified"] = "Electrified"
 L["Clearcasting"] = "Clearcasting"
 L["Berserking"] = "Berserking"
 L["Elemental Mastery"] = "Elemental Mastery"
 L["Nature's Swiftness"] = "Nature's Swiftness"
-L["The Eye of the Dead"] = "The Eye of the Dead"
-L["Fever Dream"] = "Fever Dream"
 L["Shadow Trance"] = "Shadow Trance"
 L["Improved Soul Fire"] = "Improved Soul Fire"
 L["Purifying Flames"] = "Purifying Flames"
@@ -66,6 +63,13 @@ L["You crit"] = "You crit "
 L["SpellCrit_Token"] = "You crit "
 L["AURASTACK_TOKEN"] = "%((%d+)%)"
 L["resisted"] = "resisted"
+
+-- Trinkles
+L["The Eye of Diminution"] = "The Eye of Diminution"
+L["The Eye of the Dead"] = "The Eye of the Dead"
+L["Fever Dream"] = "Fever Dream"
+L["Essence of Sapphiron"] = "Essence of Sapphiron"
+
 
 if (GetLocale() == "zhCN") then
     L["The Eye of Diminution"] = "衰落之眼"
@@ -108,6 +112,8 @@ if (GetLocale() == "zhCN") then
     L["SpellCrit_Token"] = "致命一击对"
     L["AURASTACK_TOKEN"] = "（(%d+)）"
     L["resisted"] = "抵抗"
+
+    L["Essence of Sapphiron"] = "萨菲隆精华"
 end
 local iconSize = 16;
 
@@ -139,6 +145,37 @@ local REFRESH_BUFF_BY_SPELL_CRIT = {
 --}
 
 local BUFFTOOLTABLE = {
+    -- Trinkles
+    --[L["Essence of Sapphiron"]] = {
+    --    id = 28862,
+    --    canRefresh = false,
+    --    texture = {'Interface\\AddOns\\BuffTool\\Images\\SapphironEssence'},
+    --    x = 0,
+    --    y = -20,
+    --    alpha = 0.9,
+    --    width = 80,
+    --    height = 160,
+    --    Blend = "ADD",
+    --    Color = {1,1,1},
+    --    Pos = "CENTER",
+    --    duration = 20,-- Example duration in seconds
+    --    resistedfresh = false, -- This buff can be refreshed by resisted hits
+    --},
+        [L["Essence of Sapphiron"]] = {
+        id = 28862,
+        canRefresh = false,
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\SapphironEssence2'},
+        x = 0,
+        y = 20,
+        alpha = .9,
+        width = 200,
+        height = 100,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "CENTER",
+        duration = 20,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
+    },
     -- Shaman buffs
     [L["The Eye of Diminution"]] = {
         id = 28862,
