@@ -72,14 +72,11 @@ L["Essence of Sapphiron"] = "Essence of Sapphiron"
 
 
 if (GetLocale() == "zhCN") then
-    L["The Eye of Diminution"] = "衰落之眼"
     L["Electrified"] = "充电"
     L["Clearcasting"] = "节能施法"
     L["Berserking"] = "狂暴"
     L["Elemental Mastery"] = "元素掌握"
     L["Nature's Swiftness"] = "自然迅捷"
-    L["The Eye of the Dead"] = "亡者之眼"
-    L["Fever Dream"] = "狂热梦想"
     L["Shadow Trance"] = "暗影冥思"
     L["Improved Soul Fire"] = "强化灵魂之火"
     L["Purifying Flames"] = "纯净火焰"
@@ -113,7 +110,11 @@ if (GetLocale() == "zhCN") then
     L["AURASTACK_TOKEN"] = "（(%d+)）"
     L["resisted"] = "抵抗"
 
-    L["Essence of Sapphiron"] = "萨菲隆精华"
+    L["Fever Dream"] = "狂热梦想"
+    L["The Eye of Diminution"] = "衰落之眼"
+    L["Essence of Sapphiron"] = "萨菲隆的精华"
+    L["The Eye of the Dead"] = "亡者之眼"
+
 end
 local iconSize = 16;
 
