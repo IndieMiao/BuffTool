@@ -81,7 +81,7 @@ if (GetLocale() == "zhCN") then
     L["The Eye of the Dead"] = "亡者之眼"
     L["Fever Dream"] = "狂热梦想"
     L["Shadow Trance"] = "暗影冥思"
-    L["Improved Soul Fire"] = "Localized Name for Improved Soul Fire"
+    L["Improved Soul Fire"] = "强化灵魂之火"
     L["Purifying Flames"] = "纯净火焰"
     L["Lightning Bolt"] = "闪电箭"
     L["Chain Lightning"] = "闪电链"
@@ -146,30 +146,14 @@ local REFRESH_BUFF_BY_SPELL_CRIT = {
 
 local BUFFTOOLTABLE = {
     -- Trinkles
-    --[L["Essence of Sapphiron"]] = {
-    --    id = 28862,
-    --    canRefresh = false,
-    --    texture = {'Interface\\AddOns\\BuffTool\\Images\\SapphironEssence'},
-    --    x = 0,
-    --    y = -20,
-    --    alpha = 0.9,
-    --    width = 80,
-    --    height = 160,
-    --    Blend = "ADD",
-    --    Color = {1,1,1},
-    --    Pos = "CENTER",
-    --    duration = 20,-- Example duration in seconds
-    --    resistedfresh = false, -- This buff can be refreshed by resisted hits
-    --},
         [L["Essence of Sapphiron"]] = {
-        id = 28862,
-        canRefresh = false,
+        canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\SapphironEssence2'},
         x = 0,
-        y = 20,
-        alpha = .9,
-        width = 200,
-        height = 100,
+        y = 0,
+        alpha = .8,
+        width = 260,
+        height = 130,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "CENTER",
@@ -178,7 +162,6 @@ local BUFFTOOLTABLE = {
     },
     -- Shaman buffs
     [L["The Eye of Diminution"]] = {
-        id = 28862,
         canRefresh = false,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\Aura71'},
         x = 0,
@@ -193,7 +176,6 @@ local BUFFTOOLTABLE = {
         resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Electrified"]] = {
-        id = 51395,
         canRefresh = true,
         texture = {
             'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
@@ -212,7 +194,6 @@ local BUFFTOOLTABLE = {
         resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Seeking Thunder"]] = {
-        id = 28861,
         canRefresh = true,
         texture = {
             'Interface\\AddOns\\BuffTool\\Images\\SeekingThunder',
@@ -229,7 +210,6 @@ local BUFFTOOLTABLE = {
         resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Clearcasting"]] = {
-        id = 45542,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\Lightning2'},
         --x = 30,
@@ -252,7 +232,6 @@ local BUFFTOOLTABLE = {
         resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Berserking"]] = {
-        id= 26635,
         canRefresh = ture,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\Aura226M'},
         x = 40,
@@ -267,7 +246,6 @@ local BUFFTOOLTABLE = {
         resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
     [L["Elemental Mastery"]] = {
-        id = 16166,
         canRefresh = false,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\AuroCrys'},
         x = 0,
@@ -295,7 +273,6 @@ local BUFFTOOLTABLE = {
         duration = nil-- Example duration in seconds
     },
     [L["The Eye of the Dead"]] = {
-        id=28780,
         canRefresh = false,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\AuraWing'},
         x = 0,
@@ -309,7 +286,6 @@ local BUFFTOOLTABLE = {
         duration = 30 -- Example duration in seconds
     },
     [L["Fever Dream"]] = {
-        id = 45858,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\Aura198'},
         x = -20,
@@ -323,7 +299,6 @@ local BUFFTOOLTABLE = {
         duration = 20 -- Example duration in seconds
     },
     [L["Stormstrike"]] = {
-        id = 45521,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\Stormstrike'},
         x = 30,
@@ -337,7 +312,6 @@ local BUFFTOOLTABLE = {
         duration = 12 -- Example duration in seconds
     },
     [L["Elemental Devastation"]] = {
-        id = 29180,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\ElementalDevastation'},
         x = -35,
@@ -351,7 +325,6 @@ local BUFFTOOLTABLE = {
         duration = 10 -- Example duration in seconds
     },
     [L["Water Shield"]] = {
-        id = 29180,
         canRefresh = false,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\WaterShield'},
         x = -50,
@@ -385,7 +358,6 @@ local BUFFTOOLTABLE = {
     
     -- -- warlock 
     [L["Shadow Trance"]] = {
-        id=17941,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\AruaUni'},
         x = -30,
@@ -399,7 +371,6 @@ local BUFFTOOLTABLE = {
         duration = 10 -- Example duration in seconds
     },
     [L["Improved Soul Fire"]] = {
-        id=51735,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\FlameDragon'},
         x = -30,
@@ -417,7 +388,6 @@ local BUFFTOOLTABLE = {
     
     -- priest
     [L["Purifying Flames"]] = {
-        id=51469,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\InnerFire'},
         x = -40,
@@ -431,7 +401,6 @@ local BUFFTOOLTABLE = {
         duration = 10 -- Example duration in seconds
     },
     [L["Enlightened"]] = {
-        id=51469,
         canRefresh = false,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\AuraCrys2'},
         x = 20,
@@ -445,7 +414,6 @@ local BUFFTOOLTABLE = {
         duration = 8 -- Example duration in seconds
     },
     [L["Searing Light"]] = {
-        id=51469,
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\AuroCrys'},
         x = 0,
@@ -463,7 +431,6 @@ local BUFFTOOLTABLE = {
     
 --    Mage
     [L["Hot Streak"]] = {
-        id = 28862,
         canRefresh = false,
         texture = {
             'Interface\\AddOns\\BuffTool\\Images\\HotStreak1',
