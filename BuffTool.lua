@@ -152,7 +152,7 @@ local BUFFTOOLTABLE = {
         texture = {'Interface\\AddOns\\BuffTool\\Images\\SapphironEssence2'},
         x = 0,
         y = 0,
-        alpha = .8,
+        alpha = .3,
         width = 260,
         height = 130,
         Blend = "ADD",
@@ -804,8 +804,10 @@ BuffTool:SetScript('OnEvent', function()
                     HandleSelfDestroyAura(L["Arcane Surge"], 4)
                 end
                 if string.find(arg1,L["Surge_Casted_Token"]) then
-                    --if isDebug then DEFAULT_CHAT_FRAME:AddMessage("Arcane Surge Casted") end
-                    HandleAuraByName(L["Arcane Surge"], false, false)
+                        if IsSpellUsable(L["Arcane Surge"]) then
+                            --if isDebug then DEFAULT_CHAT_FRAME:AddMessage("Arcane Surge Casted") end
+                            HandleAuraByName(L["Arcane Surge"], false, false)
+                    end
                 end
             end
         end
