@@ -31,7 +31,7 @@ L["Electrified"] = "Electrified"
 L["Clearcasting"] = "Clearcasting"
 L["Berserking"] = "Berserking"
 L["Elemental Mastery"] = "Elemental Mastery"
-L["Nature's Swiftness"] = "Nature's Swiftness"
+L["Ancestral Swiftness"] = "Ancestral Swiftness"
 L["Shadow Trance"] = "Shadow Trance"
 L["Improved Soul Fire"] = "Improved Soul Fire"
 L["Purifying Flames"] = "Purifying Flames"
@@ -70,13 +70,15 @@ L["The Eye of the Dead"] = "The Eye of the Dead"
 L["Fever Dream"] = "Fever Dream"
 L["Essence of Sapphiron"] = "Essence of Sapphiron"
 
+L["Elune"] = "Your Elune"
+
 
 if (GetLocale() == "zhCN") then
     L["Electrified"] = "充电"
     L["Clearcasting"] = "节能施法"
     L["Berserking"] = "狂暴"
     L["Elemental Mastery"] = "元素掌握"
-    L["Nature's Swiftness"] = "自然迅捷"
+    L["Ancestral Swiftness"] = "自然迅捷"
     L["Shadow Trance"] = "暗影冥思"
     L["Improved Soul Fire"] = "强化灵魂之火"
     L["Purifying Flames"] = "纯净火焰"
@@ -114,6 +116,8 @@ if (GetLocale() == "zhCN") then
     L["The Eye of Diminution"] = "衰落之眼"
     L["Essence of Sapphiron"] = "萨菲隆的精华"
     L["The Eye of the Dead"] = "亡者之眼"
+
+    L["Elune"] = "Your Elune"
 
 end
 local iconSize = 16;
@@ -260,7 +264,7 @@ local BUFFTOOLTABLE = {
         duration = nil,-- Example duration in seconds
         resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
-    [L["Nature's Swiftness"]] = {
+    [L["Ancestral Swiftness"]] = {
         canRefresh = false,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\AuroCrys'},
         x = 0,
@@ -466,7 +470,7 @@ local BUFFTOOLTABLE = {
         Color = {1,1,1},
         Pos = "LEFT",
         stack = true,
-        duration = 8 -- Example duration in seconds
+        duration = 10 -- Example duration in seconds
     },
     [L["Temporal Convergence"]] = {
         id = 51395,
@@ -728,7 +732,7 @@ local function DebugLog(message)
     DEFAULT_CHAT_FRAME:AddMessage("BUFFTOOL: "..message)
 end
 
-local function HandleSelfDestroyAura(spellName, delay)
+local function HandleAutoDestroyAura(spellName, delay)
     if not spellName or not delay then return end
     if ArcaneSurgeTimer then
         ArcaneSurgeTimer:SetScript('OnUpdate', nil)
@@ -801,13 +805,17 @@ BuffTool:SetScript('OnEvent', function()
 
             if(PlayerClass == "MAGE") then
                 if string.find(arg1,L["resisted"]) then
-                    HandleSelfDestroyAura(L["Arcane Surge"], 4)
+                    if string.find(arg1,L["Elune"]) then
+                        --    do nothing
+                    else
+                        if IsSpellUsable(L["Arcane Surge"]) then
+                            HandleAutoDestroyAura(L["Arcane Surge"], 4)
+                        end
+                    end
                 end
                 if string.find(arg1,L["Surge_Casted_Token"]) then
-                        if IsSpellUsable(L["Arcane Surge"]) then
                             --if isDebug then DEFAULT_CHAT_FRAME:AddMessage("Arcane Surge Casted") end
-                            HandleAuraByName(L["Arcane Surge"], false, false)
-                    end
+                        HandleAuraByName(L["Arcane Surge"], false, false)
                 end
             end
         end
