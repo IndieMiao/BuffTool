@@ -72,6 +72,12 @@ L["Essence of Sapphiron"] = "Essence of Sapphiron"
 
 L["Elune"] = "Your Elune"
 
+local SFilter= {
+    ["Elune"] = "Elune",
+    ["Ancient Accord"] = "Ancient Accord",
+    ["Shoot"] = "Shoot",
+}
+
 
 if (GetLocale() == "zhCN") then
     L["Electrified"] = "充电"
@@ -804,13 +810,18 @@ BuffTool:SetScript('OnEvent', function()
             RefreshBuffByHit(arg1, REFRESH_BUFF_BY_SPELL_CRIT)
 
             if(PlayerClass == "MAGE") then
+                local isSurgeAvailable = true
+
                 if string.find(arg1,L["resisted"]) then
-                    if string.find(arg1,L["Elune"]) then
-                        --    do nothing
-                    else
-                        if IsSpellUsable(L["Arcane Surge"]) then
-                            HandleAutoDestroyAura(L["Arcane Surge"], 4)
+                    for key, _ in pairs(SFilter) do
+                        if string.find(arg1, SFilter[key]) then
+                            isSurgeAvailable = false
+                            if isDebug then DEFAULT_CHAT_FRAME:AddMessage("Filtered by ".. key) end
+                            break
                         end
+                    end
+                    if isSurgeAvailable==true  then
+                        HandleAutoDestroyAura(L["Arcane Surge"], 4)
                     end
                 end
                 if string.find(arg1,L["Surge_Casted_Token"]) then
