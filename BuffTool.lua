@@ -69,7 +69,9 @@ L["The Eye of Diminution"] = "The Eye of Diminution"
 L["The Eye of the Dead"] = "The Eye of the Dead"
 L["Fever Dream"] = "Fever Dream"
 L["Essence of Sapphiron"] = "Essence of Sapphiron"
+L["Spell Blasting"] = "Spell Blasting"
 
+-- Remove Elune resist for arc mage
 L["Elune"] = "Your Elune"
 
 local SFilter= {
@@ -123,6 +125,7 @@ if (GetLocale() == "zhCN") then
     L["Essence of Sapphiron"] = "萨菲隆的精华"
     L["The Eye of the Dead"] = "亡者之眼"
 
+-- Remove Elune resist for arc mage
     L["Elune"] = "Your Elune"
 
 end
@@ -484,14 +487,14 @@ local BUFFTOOLTABLE = {
         texture = {
             'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
         },
-        x = -30,
-        y = -30,
+        x = 40,
+        y = -90,
         alpha = 0.9,
-        width = 130,
-        height = 130,
+        width = 96,
+        height = 96,
         Blend = "ADD",
         Color = {1,1,1},
-        Pos = "LEFT",
+        Pos = "TOPRIGHT",
         stack=true,
         duration = 12 -- Example duration in seconds
     },
@@ -501,14 +504,14 @@ local BUFFTOOLTABLE = {
         texture = {
             'Interface\\AddOns\\BuffTool\\Images\\ArcaneSurge2',
         },
-        x = 30,
+        x = -10,
         y = -20,
-        alpha = 0.8,
-        width = 64,
-        height = 64,
+        alpha = 0.6,
+        width = 52,
+        height = 52,
         Blend = "ADD",
         Color = {1,1,1},
-        Pos = "TOPLEFT",
+        Pos = "TOPRIGHT",
         --x = 10,
         --y = 10,
         --alpha = .8,
