@@ -70,6 +70,9 @@ L["The Eye of the Dead"] = "The Eye of the Dead"
 L["Fever Dream"] = "Fever Dream"
 L["Essence of Sapphiron"] = "Essence of Sapphiron"
 L["Spell Blasting"] = "Spell Blasting"
+L["Sulfuron Blaze"] = "Sulfuron Blaze"
+L["Elune's Wrath"] = "Elune's Wrath"
+
 
 -- Remove Elune resist for arc mage
 L["Elune"] = "Your Elune"
@@ -173,6 +176,36 @@ local BUFFTOOLTABLE = {
         Pos = "CENTER",
         duration = 20,-- Example duration in seconds
         resistedfresh = false, -- This buff can be refreshed by resisted hits
+    },
+        [L["Spell Blasting"]] = {
+        canRefresh = true,
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\SpellBlasting'},
+        x = 80,
+        y = 0,
+        alpha = .9,
+        width = 60,
+        height = 120,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "CENTER",
+        duration = 10,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
+        mirror = false
+    },
+        [L["Sulfuron Blaze"]] = {
+        canRefresh = true,
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\SulfuronBlaze'},
+        x = -80,
+        y = 0,
+        alpha = .9,
+        width = 60,
+        height = 120,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "CENTER",
+        duration = 6,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
+        mirror = false
     },
     -- Shaman buffs
     [L["The Eye of Diminution"]] = {
@@ -506,7 +539,7 @@ local BUFFTOOLTABLE = {
         },
         x = -10,
         y = -20,
-        alpha = 0.6,
+        alpha = 0.9,
         width = 52,
         height = 52,
         Blend = "ADD",
@@ -526,7 +559,7 @@ local BUFFTOOLTABLE = {
     },
 
     [L["Arcane Power"]] = {
-        canRefresh = false,
+        canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\LightningBlue'},
         x = 0,
         y = 0,
@@ -536,7 +569,7 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOP",
-        duration = nil-- Example duration in seconds
+        duration = 20-- Example duration in seconds
     },
 
     --    Rogu
@@ -619,7 +652,7 @@ end
 
 
 
-local function HandleAuraByName(spellName, isActive, updateOnlyTimer,stack)
+local function HandleAuraByName(spellName, isActive, updateOnlyTimer, stack)
     local auraInfo = BUFFTOOLTABLE[spellName]
     if not auraInfo then return end
 
@@ -645,6 +678,33 @@ local function HandleAuraByName(spellName, isActive, updateOnlyTimer,stack)
         else
             textureObject:SetTexture(auraInfo.texture[1])
         end
+
+        -- Create mirrored texture if `mirror` is true
+        if auraInfo.mirror and not auraTexturesObjects[spellName .. "_mirror"] then
+            local mirrorTexture = BuffTool:CreateTexture(nil, 'ARTWORK')
+            local mirrorPos = auraInfo.Pos
+            if mirrorPos == "LEFT" then mirrorPos = "RIGHT"
+            elseif mirrorPos == "RIGHT" then mirrorPos = "LEFT"
+            elseif mirrorPos == "TOPLEFT" then mirrorPos = "TOPRIGHT"
+            elseif mirrorPos == "TOPRIGHT" then mirrorPos = "TOPLEFT"
+            elseif mirrorPos == "BOTTOMLEFT" then mirrorPos = "BOTTOMRIGHT"
+            elseif mirrorPos == "BOTTOMRIGHT" then mirrorPos = "BOTTOMLEFT"
+            elseif mirrorPos == "CENTER" then mirrorPos = "CENTER"
+            end
+
+            mirrorTexture:SetPoint('CENTER', BuffTool, mirrorPos, -auraInfo.x, auraInfo.y)
+            mirrorTexture:SetAlpha(auraInfo.alpha)
+            mirrorTexture:SetWidth(auraInfo.width)
+            mirrorTexture:SetHeight(auraInfo.height)
+            mirrorTexture:SetBlendMode(auraInfo.Blend)
+            mirrorTexture:SetVertexColor(auraInfo.Color[1], auraInfo.Color[2], auraInfo.Color[3])
+            mirrorTexture:SetTexture(auraInfo.texture[1])
+
+            -- Flip the texture horizontally
+            mirrorTexture:SetTexCoord(1, 0, 0, 1)
+            mirrorTexture:Show()
+            auraTexturesObjects[spellName .. "_mirror"] = mirrorTexture
+        end
     end
 
     if not timerText then
@@ -656,6 +716,9 @@ local function HandleAuraByName(spellName, isActive, updateOnlyTimer,stack)
     if isActive then
         if not updateOnlyTimer then
             textureObject:Show()
+            if auraTexturesObjects[spellName .. "_mirror"] then
+                auraTexturesObjects[spellName .. "_mirror"]:Show()
+            end
         end
         if timerText and auraInfo.duration and auraInfo.canRefresh then
             ShowTimer(spellName, auraInfo.duration, timerText)
@@ -665,6 +728,9 @@ local function HandleAuraByName(spellName, isActive, updateOnlyTimer,stack)
     else
         if not updateOnlyTimer then
             textureObject:Hide()
+            if auraTexturesObjects[spellName .. "_mirror"] then
+                auraTexturesObjects[spellName .. "_mirror"]:Hide()
+            end
         end
         if timerText then
             timerText:Hide()
