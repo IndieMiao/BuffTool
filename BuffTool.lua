@@ -6,12 +6,21 @@ BuffTool:SetHeight(300)
 BuffTool:RegisterEvent('COMBAT_TEXT_UPDATE')
 BuffTool:RegisterEvent('PLAYER_DEAD')
 BuffTool:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS')
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS')
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_BUFFS')
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_PERIODIC_PARTY_BUFFS')
 BuffTool:RegisterEvent('CHAT_MSG_SPELL_SELF_DAMAGE')
 BuffTool:RegisterEvent('CHAT_MSG_COMBAT_SELF_HITS')
 -- For windfury weapon and rockbiter weapon
 BuffTool:RegisterEvent('CHAT_MSG_SPELL_ITEM_ENCHANTMENTS')
 -- For water shield for shaman 
 BuffTool:RegisterEvent('CHAT_MSG_SPELL_SELF_BUFF')
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_AURA_GONE_OTHER')
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_AURA_GONE_PARTY')
+BuffTool:RegisterEvent('CHAT_MSG_SPELL_AURA_GONE_SELF')
+BuffTool:RegisterEvent('PLAYER_ENTERING_WORLD')
+BuffTool:RegisterEvent('UNIT_AURA')
+BuffTool:RegisterEvent('UNIT_PET')
 
 BuffTool:RegisterEvent('BIND_ENCHANT')
 
@@ -21,11 +30,16 @@ local isDebugTexture = false
 local auraTexturesObjects = {}
 local auraTimersObjects = {}
 local auraTimers = {}
+local petAuraStates = {}
+local petAuraScanElapsed = 0
+local PET_AURA_SCAN_INTERVAL = 0.5
 
 local L = {}
 local _,PlayerClass = UnitClass("player")
 
 local ArcaneSurgeTimer = nil
+local BuffToolPetScanTooltip = CreateFrame('GameTooltip', 'BuffToolPetScanTooltip', nil, 'GameTooltipTemplate')
+BuffToolPetScanTooltip:SetOwner(BuffTool, 'ANCHOR_NONE')
 
 L["Electrified"] = "Electrified"
 L["Clearcasting"] = "Clearcasting"
@@ -45,6 +59,8 @@ L["Enlightened"] = "Enlightened"
 L["Searing Light"] = "Searing Light"
 L["Seeking Thunder"] = "Seeking Thunder"
 L["Water Shield"] = "Water Shield"
+L["Power Overwhelming"] = "Power Overwhelming"
+L["Unleashed Potential"] = "Unleashed Potential"
 
 -- Mage
 L["Hot Streak"] = "Hot Streak"
@@ -72,6 +88,7 @@ L["Essence of Sapphiron"] = "Essence of Sapphiron"
 L["Spell Blasting"] = "Spell Blasting"
 L["Sulfuron Blaze"] = "Sulfuron Blaze"
 L["Elune's Wrath"] = "Elune's Wrath"
+L["Uncontained Magic"] = "Uncontained Magic"
 
 
 -- Remove Elune resist for arc mage
@@ -103,6 +120,8 @@ if (GetLocale() == "zhCN") then
     L["Searing Light"] = "灼热之光"
     L["Seeking Thunder"] = "Seeking Thunder"
     L["Water Shield"] = "Water Shield"
+    L["Power Overwhelming"] = "Power Overwhelming"
+    L["Unleashed Potential"] = "Unleashed Potential"
 
     -- 法师
     L["Hot Streak"] = "法术连击"
@@ -127,6 +146,7 @@ if (GetLocale() == "zhCN") then
     L["The Eye of Diminution"] = "衰落之眼"
     L["Essence of Sapphiron"] = "萨菲隆的精华"
     L["The Eye of the Dead"] = "亡者之眼"
+    L["Uncontained Magic"] = "Uncontained Magic"
 
 -- Remove Elune resist for arc mage
     L["Elune"] = "Your Elune"
@@ -146,6 +166,25 @@ local REFRESH_BUFF_BY_HIT = {
         L["Flurry"],
         L["Clearcasting"],
     }
+}
+local PET_BUFF_ALIASES = {
+    [L["Power Overwhelming"]] = {
+        L["Power Overwhelming"],
+    },
+    [L["Unleashed Potential"]] = {
+        L["Unleashed Potential"],
+    },
+}
+local PET_BUFF_GAIN_EVENTS = {
+    ['CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS'] = true,
+    ['CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_BUFFS'] = true,
+    ['CHAT_MSG_SPELL_PERIODIC_PARTY_BUFFS'] = true,
+    ['CHAT_MSG_SPELL_SELF_BUFF'] = true,
+}
+local PET_BUFF_FADE_EVENTS = {
+    ['CHAT_MSG_SPELL_AURA_GONE_OTHER'] = true,
+    ['CHAT_MSG_SPELL_AURA_GONE_PARTY'] = true,
+    ['CHAT_MSG_SPELL_AURA_GONE_SELF'] = true,
 }
 local REFRESH_BUFF_BY_SPELL_CRIT = {
     [L["SpellCrit_Token"]] = {
@@ -177,12 +216,26 @@ local BUFFTOOLTABLE = {
         duration = 20,-- Example duration in seconds
         resistedfresh = false, -- This buff can be refreshed by resisted hits
     },
+        [L["Uncontained Magic"]] = {
+        canRefresh = true,
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\UncontainedMagic'},
+        x = -100,
+        y = 0,
+        alpha = .8,
+        width = 80,
+        height = 160,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "CENTER",
+        duration = 6,-- Example duration in seconds
+        resistedfresh = false, -- This buff can be refreshed by resisted hits
+    },
         [L["Spell Blasting"]] = {
         canRefresh = true,
         texture = {'Interface\\AddOns\\BuffTool\\Images\\SpellBlasting'},
         x = 80,
         y = 0,
-        alpha = .9,
+        alpha = .6,
         width = 60,
         height = 120,
         Blend = "ADD",
@@ -197,7 +250,7 @@ local BUFFTOOLTABLE = {
         texture = {'Interface\\AddOns\\BuffTool\\Images\\SulfuronBlaze'},
         x = -80,
         y = 0,
-        alpha = .9,
+        alpha = .6,
         width = 60,
         height = 120,
         Blend = "ADD",
@@ -384,6 +437,34 @@ local BUFFTOOLTABLE = {
         Pos = "RIGHT",
         duration = 10 -- Example duration in seconds
     },
+    [L["Power Overwhelming"]] = {
+        canRefresh = false,
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\WaterShield'},
+        x = -36,
+        y = 34,
+        alpha = 0.8,
+        width = 52,
+        height = 52,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "BOTTOMLEFT",
+        duration = 10,
+        resistedfresh = false,
+    },
+    [L["Unleashed Potential"]] = {
+        canRefresh = true,
+        texture = {'Interface\\AddOns\\BuffTool\\Images\\WaterShield'},
+        x = 36,
+        y = 34,
+        alpha = 0.8,
+        width = 52,
+        height = 52,
+        Blend = "ADD",
+        Color = {1,1,1},
+        Pos = "BOTTOMRIGHT",
+        duration = 20,
+        resistedfresh = false,
+    },
     
     --[L["Flurry"]] = {
     --    id = 12319,
@@ -518,13 +599,13 @@ local BUFFTOOLTABLE = {
         id = 51395,
         canRefresh = true,
         texture = {
-            'Interface\\AddOns\\BuffTool\\Images\\auraLighting',
+            'Interface\\AddOns\\BuffTool\\Images\\auraLighting3',
         },
         x = 40,
         y = -90,
-        alpha = 0.9,
-        width = 96,
-        height = 96,
+        alpha = 0.8,
+        width = 64,
+        height = 128,
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOPRIGHT",
@@ -539,7 +620,7 @@ local BUFFTOOLTABLE = {
         },
         x = -10,
         y = -20,
-        alpha = 0.9,
+        alpha = 0.8,
         width = 52,
         height = 52,
         Blend = "ADD",
@@ -569,6 +650,7 @@ local BUFFTOOLTABLE = {
         Blend = "ADD",
         Color = {1,1,1},
         Pos = "TOP",
+        stack=false,
         duration = 20-- Example duration in seconds
     },
 
@@ -754,6 +836,21 @@ local function HideAllTextures()
     if isDebug then DEFAULT_CHAT_FRAME:AddMessage("All textures hidden due to player death") end
 end
 
+local GetActiveTrackedPetAuras
+
+local function SyncTrackedPetAuras()
+    local activeAuras = GetActiveTrackedPetAuras()
+
+    for auraName, _ in pairs(PET_BUFF_ALIASES) do
+        local isActive = activeAuras[auraName] == true
+        if petAuraStates[auraName] ~= isActive then
+            petAuraStates[auraName] = isActive
+            if isDebug then DEFAULT_CHAT_FRAME:AddMessage("BUFFTOOL: pet_scan: " .. auraName .. " active=" .. tostring(isActive)) end
+            HandleAuraByName(auraName, isActive, false)
+        end
+    end
+end
+
 local function GetAuraStacks(message)
     if not message then return  nil end
     local stackStart, stackStop, stack= string.find(message, L["AURASTACK_TOKEN"])
@@ -768,6 +865,126 @@ local function IsAuraActived(message)
         end
     end
     return nil, false
+end
+
+local function GetTrackedPetAura(message, requireOwnPet, sourceEvent)
+    if not message then return nil end
+
+    local matchedAura = nil
+
+    for auraName, aliases in pairs(PET_BUFF_ALIASES) do
+        for _, alias in pairs(aliases) do
+            if string.find(message, alias, 1, true) then
+                matchedAura = auraName
+                break
+            end
+        end
+
+        if matchedAura then
+            break
+        end
+    end
+
+    if not matchedAura then
+        return nil
+    end
+
+    if not requireOwnPet then
+        return matchedAura
+    end
+
+    local petName = UnitName("pet")
+    if petName and string.find(message, petName, 1, true) then
+        return matchedAura
+    end
+
+    if string.find(message, "Your pet", 1, true) or string.find(message, "your pet", 1, true) then
+        return matchedAura
+    end
+
+    if sourceEvent == 'CHAT_MSG_SPELL_SELF_BUFF' or sourceEvent == 'CHAT_MSG_SPELL_AURA_GONE_SELF' then
+        return matchedAura
+    end
+
+    return nil
+end
+
+local function GetPetAuraName(index, isDebuff)
+    if not UnitExists("pet") then
+        return nil
+    end
+
+    BuffToolPetScanTooltip:ClearLines()
+    if isDebuff then
+        BuffToolPetScanTooltip:SetUnitDebuff("pet", index)
+    else
+        BuffToolPetScanTooltip:SetUnitBuff("pet", index)
+    end
+
+    local textLeft = getglobal("BuffToolPetScanTooltipTextLeft1")
+    if not textLeft then
+        return nil
+    end
+
+    local buffName = textLeft:GetText()
+    if buffName and buffName ~= "" then
+        return buffName
+    end
+
+    return nil
+end
+
+GetActiveTrackedPetAuras = function()
+    local activeAuras = {}
+
+    if not UnitExists("pet") then
+        return activeAuras
+    end
+
+    local function TrackPetAuraName(auraNameText)
+        if not auraNameText then
+            return
+        end
+
+        for auraName, aliases in pairs(PET_BUFF_ALIASES) do
+            for _, alias in pairs(aliases) do
+                if string.find(auraNameText, alias, 1, true) then
+                    activeAuras[auraName] = true
+                    break
+                end
+            end
+
+            if activeAuras[auraName] then
+                break
+            end
+        end
+    end
+
+    local index = 1
+    while true do
+        local buffTexture = UnitBuff("pet", index)
+        if not buffTexture then
+            break
+        end
+
+        TrackPetAuraName(GetPetAuraName(index, false))
+
+        index = index + 1
+    end
+
+    index = 1
+    while true do
+        local debuffTexture = UnitDebuff("pet", index)
+        if not debuffTexture then
+            break
+        end
+
+        TrackPetAuraName(GetPetAuraName(index, true))
+
+        index = index + 1
+    end
+
+    return activeAuras
 end
 
 local function RefreshTimeBySpell(CombatText)
@@ -835,7 +1052,18 @@ end
 
 BuffTool:SetScript('OnEvent', function()
     if event == 'PLAYER_DEAD' then
+        petAuraStates = {}
         HideAllTextures()
+    end
+    if event == 'PLAYER_ENTERING_WORLD' then
+        SyncTrackedPetAuras()
+    end
+    if event == 'UNIT_PET' and arg1 == 'player' then
+        petAuraStates = {}
+        SyncTrackedPetAuras()
+    end
+    if event == 'UNIT_AURA' and arg1 == 'pet' then
+        SyncTrackedPetAuras()
     end
     if event == "CHAT_MSG_SPELL_PERIODIC_SELF_BUFFS" then
         if arg1 then
@@ -844,6 +1072,18 @@ BuffTool:SetScript('OnEvent', function()
             if auraName then
                 if stack and isDebug then DebugLog("buffTool : " .. auraName .. " ".. stack) end
                 HandleAuraByName(auraName, true, false ,stack)
+            end
+        end
+    end
+    if PET_BUFF_GAIN_EVENTS[event] then
+        if arg1 then
+            if isDebug then DebugLog("pet_gain_event(" .. event .. "): " .. arg1) end
+            local auraName = GetTrackedPetAura(arg1, true, event)
+            if auraName then
+                if isDebug then DebugLog("pet_buff: " .. arg1) end
+                HandleAuraByName(auraName, true, false)
+            elseif isDebug then
+                DebugLog("pet_gain_no_match: " .. arg1)
             end
         end
     end
@@ -867,6 +1107,18 @@ BuffTool:SetScript('OnEvent', function()
         if arg1 then
             if isDebug then
                 DebugLog("self_buff: "..arg1)
+            end
+        end
+    end
+    if PET_BUFF_FADE_EVENTS[event] then
+        if arg1 then
+            if isDebug then DebugLog("pet_fade_event(" .. event .. "): " .. arg1) end
+            local auraName = GetTrackedPetAura(arg1, true, event)
+            if auraName then
+                if isDebug then DebugLog("pet_buff_over: " .. arg1) end
+                HandleAuraByName(auraName, false, false)
+            elseif isDebug then
+                DebugLog("pet_fade_no_match: " .. arg1)
             end
         end
     end
@@ -909,6 +1161,14 @@ BuffTool:SetScript('OnEvent', function()
                 HandleAuraByName(arg2, false, false)
             end
         end
+    end
+end)
+
+BuffTool:SetScript('OnUpdate', function()
+    petAuraScanElapsed = petAuraScanElapsed + arg1
+    if petAuraScanElapsed >= PET_AURA_SCAN_INTERVAL then
+        petAuraScanElapsed = 0
+        SyncTrackedPetAuras()
     end
 end)
 
