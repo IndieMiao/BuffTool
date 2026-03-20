@@ -712,18 +712,27 @@ local function ShowTimer(spellName, duration, timerText)
     end
 
     local timer = CreateFrame('FRAME')
-    timer.start = GetTime()
-    timer.duration = duration
-    timer.sec = 0
+    timer.expiresAt = GetTime() + duration
+    timer.lastShown = nil
     timer:SetScript('OnUpdate', function()
-        if GetTime() >= (this.start + this.sec) then
-            this.sec = this.sec + 1
-            if this.sec <= duration then
-                timerText:SetText(this.duration - this.sec)
-                return
-            end
+        local remaining = timer.expiresAt - GetTime()
+        if remaining <= 0 then
             timerText:Hide()
-            this:SetScript('OnUpdate', nil)
+            timer:SetScript('OnUpdate', nil)
+            auraTimers[spellName] = nil
+            return
+        end
+
+        local displayText = nil
+        if remaining >= 3 then
+            displayText = tostring(math.ceil(remaining))
+        else
+            displayText = string.format("%.1f", remaining)
+        end
+
+        if displayText ~= timer.lastShown then
+            timer.lastShown = displayText
+            timerText:SetText(displayText)
         end
     end)
     timerText:SetText(duration)
@@ -1039,12 +1048,13 @@ local function HandleAutoDestroyAura(spellName, delay)
     --end
 
     local timer = CreateFrame('FRAME')
-    timer.start = GetTime()
+    timer.expiresAt = GetTime() + delay
     ArcaneSurgeTimer = timer
     timer:SetScript('OnUpdate', function()
-        if GetTime() >= (this.start + delay) then
+        if GetTime() >= timer.expiresAt then
             HandleAuraByName(spellName, false, false)
-            this:SetScript('OnUpdate', nil)
+            timer:SetScript('OnUpdate', nil)
+            ArcaneSurgeTimer = nil
         end
     end)
 end
